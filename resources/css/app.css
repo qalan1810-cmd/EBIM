@@ -1,0 +1,1371 @@
+@layer theme, base, elementor, components, utilities;
+
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* ---------------------------------------------------------------------------
+   Soho Sonic — self-hosted webfonts (Satoshi + Poppins)
+--------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Satoshi';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/sohosonic/fonts/Satoshi-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Satoshi';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/sohosonic/fonts/Satoshi-Bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Satoshi';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/assets/sohosonic/fonts/Satoshi-Black.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Satoshi';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/sohosonic/fonts/Satoshi-Italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Satoshi';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/sohosonic/fonts/Satoshi-BoldItalic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/sohosonic/fonts/Poppins-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/sohosonic/fonts/Poppins-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/sohosonic/fonts/Poppins-700.woff2') format('woff2');
+}
+
+/* ---------------------------------------------------------------------------
+   Design tokens measured from the source site (Elementor kit 22298)
+--------------------------------------------------------------------------- */
+@theme {
+  --font-sans: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
+  --font-poppins: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #1d1d1d;
+  --color-ink-soft: #54595f;
+  --color-mist: #f4f4f4;
+  --color-ivory: #f7f2ea;
+  --color-cream: #fdfff5;
+  --color-blush: #ff95b9;
+  --color-brand: #bc1c2c;
+  --color-brand-soft: #bc1c2c6e;
+  --color-silver: #c8c8c8;
+  --color-slate: #7a7a7a;
+  --color-peach: #ffbc7d;
+
+  --container-site: 1280px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-mist);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  a {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    margin: 0;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Header height — kept in a single token so the sticky header and the
+   full-bleed home hero (which slides underneath it) always agree. The value
+   is the smallest measured header height for each range, so the hero is never
+   short and leaves no sliver at the fold.
+---------------------------------------------------------------------------- */
+:root {
+  --header-h: 60px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-h: 70px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 92px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Sticky header backdrop. At the top of the page the bar only carries a dark
+   gradient that dissolves downward over the hero photo. On scroll the solid
+   stop (--nav-cover) slides from 28% to 100% while the bar colour settles to
+   the site ink, so the dark band gently descends until it covers the whole bar
+   instead of snapping on. Both --nav-cover and --nav-bar are registered custom
+   properties, which is what lets them animate smoothly.
+
+   The bar settles to exactly --color-ink (not a darker black) so its bottom
+   edge stays invisible against the site's dark sections while scrolling.
+--------------------------------------------------------------------------- */
+@property --nav-cover {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 28%;
+}
+
+@property --nav-bar {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #000000e0;
+}
+
+#site-header {
+  --nav-cover: 28%;
+  --nav-bar: #000000e0;
+  background-color: transparent;
+  background-image: linear-gradient(
+    180deg,
+    var(--nav-bar) 0%,
+    var(--nav-bar) var(--nav-cover),
+    rgba(0, 0, 0, 0) 100%
+  );
+  transition:
+    --nav-cover 550ms ease-in-out,
+    --nav-bar 550ms ease-in-out,
+    background-color 550ms ease-in-out;
+}
+
+#site-header.is-scrolled {
+  --nav-cover: 100%;
+  --nav-bar: #1d1d1d;
+  background-color: var(--color-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Contacto es la unica pagina publica sin portada fotografica: el fondo es
+   blanco desde el borde superior. Si la barra conservara su degradado corto,
+   el logo y los enlaces blancos quedarian sobre blanco. En esta pagina el
+   desvanecido nace cerrado y cubre todas las letras; al hacer scroll no cambia
+   nada, porque ya esta en su estado final.
+--------------------------------------------------------------------------- */
+body.sin-portada #site-header {
+  --nav-cover: 100%;
+  --nav-bar: #1d1d1d;
+  background-color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #site-header {
+    transition: none;
+  }
+}
+
+/*
+   Toda el area privada (acceso, portal del estudiante y panel de
+   administracion) conserva el mismo desvanecido NEGRO que usa el resto del
+   sitio en la barra. La diferencia es el fondo que hay detras: como la pagina
+   sube bajo la barra, el degradado se disuelve sobre el guindo de la pagina y
+   no sobre el gris claro del body (que era lo que se adivinaba como una mancha
+   clara al pisar la barra).
+
+   Al hacer scroll la barra se cierra en guindo solido, del mismo color que el
+   fondo, en lugar de pasar a la tinta: asi no queda una banda oscura de un
+   color que no es el de la pagina.
+
+   Estas reglas van a proposito FUERA de cualquier @layer: las de #site-header
+   estan sin capa y las reglas sin capa ganan siempre a las de @layer, por muy
+   especificas que estas sean. Dentro de @layer components no llegaban.
+*/
+body.pagina-guindo #site-header {
+  --nav-bar: rgba(0, 0, 0, 0.88);
+  background-color: transparent;
+}
+body.pagina-guindo #site-header.is-scrolled {
+  --nav-bar: #830101;
+  background-color: #830101;
+}
+
+@layer components {
+  /*
+     Layout shell — every section wraps its content in .ebim-container so the
+     page reads as one centred, symmetric column on wide screens, while keeping
+     the original 5% gutters on small ones. Backgrounds stay full-bleed because
+     the shell lives inside the <section>, never around it.
+  */
+  .ebim-container {
+    width: 100%;
+    max-width: var(--container-site);
+    margin-inline: auto;
+    padding-inline: max(1.25rem, 5%);
+  }
+
+  .site-container {
+    width: 100%;
+    max-width: var(--container-site);
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  /* Interior-page rich text (Elementor text-editor widget) */
+  .page-prose {
+    font-size: 20px;
+    line-height: 1.4;
+    color: var(--color-ink);
+  }
+  .page-prose p {
+    margin-bottom: 14.4px;
+  }
+  .page-prose p:last-child {
+    margin-bottom: 0;
+  }
+  .page-prose a {
+    color: inherit;
+    font-weight: 400;
+    text-decoration: underline;
+  }
+  .page-prose a:hover {
+    color: var(--color-brand);
+  }
+  .page-prose strong,
+  .page-prose b {
+    font-weight: 700;
+  }
+  .page-prose ul {
+    list-style: disc;
+    margin: 0 0 14.4px;
+    padding-left: 1.4em;
+  }
+  .page-prose ol {
+    list-style: decimal;
+    margin: 0 0 14.4px;
+    padding-left: 1.4em;
+  }
+  .page-prose li {
+    margin-bottom: 4px;
+  }
+  .page-prose h3 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 18px 0 8px;
+  }
+  .page-prose h4 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 16px 0 6px;
+  }
+  /* Equipment-list sub column text is slightly smaller in the source */
+  .equip-prose {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+  .equip-prose p {
+    margin: 0 0 2px;
+  }
+  .equip-prose h5 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 18px 0 8px;
+  }
+  .equip-prose h5:first-child {
+    margin-top: 0;
+  }
+
+  /* Elementor button (measured: #bc1c2c, radius 15, 12x24, 18/700, ls 1px) */
+  .btn-ss {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 15px;
+    background-color: var(--color-brand);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn-ss:hover {
+    background-color: var(--color-ink);
+    color: #fff;
+  }
+
+  /*
+     Boton para superficies oscuras o guindo (tarjetas con fondo de marca).
+     El .btn-ss normal es rojo sobre blanco; sobre una tarjeta guindo quedaria
+     rojo sobre rojo y casi no se veria. Este invierte el par: fondo blanco y
+     letra guindo, con la misma forma y tipografia del sistema, asi que el
+     cambio de color es lo unico que varia.
+  */
+  .btn-claro {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 28px;
+    border-radius: 15px;
+    background-color: #fff;
+    color: var(--color-brand);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  }
+  .btn-claro:hover {
+    background-color: var(--color-ink);
+    color: #fff;
+  }
+  .btn-claro svg {
+    flex-shrink: 0;
+  }
+
+  /*
+     Fondo guindo texturado de toda el area privada: el acceso ("Ingresar"), el
+     portal del estudiante y el panel de administracion. El tono guindo no es
+     inventado: es el color mas frecuente medido directamente sobre LOGOEBIM.jpg
+     (#830101, rgb 131,1,1; el escudo varia entre #6D0302 y #870102). Sobre el
+     se montan cuatro capas: una luz suave, un tejido diagonal finisimo, una
+     vineta que centra la vista y un degradado vertical que da profundidad. Todo
+     por debajo del 6% de opacidad, para que la textura se sienta y no se vea.
+
+     Va en <body> y no en #content: como el body no lleva fondo propio, el
+     navegador lo sube al lienzo y pinta detras de TODA la pagina, incluida la
+     franja que hay detras de la barra fija. Puesto en #content esa franja se
+     quedaba en blanco y el desvanecido negro de la barra se disolvia hacia un
+     blanco que no era el de la pagina.
+  */
+  body.pagina-guindo {
+    background-color: #830101;
+    background-image:
+      radial-gradient(70% 55% at 50% 46%, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0) 65%),
+      repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.032) 0px,
+        rgba(255, 255, 255, 0.032) 1px,
+        rgba(0, 0, 0, 0) 1px,
+        rgba(0, 0, 0, 0) 9px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        rgba(0, 0, 0, 0.055) 0px,
+        rgba(0, 0, 0, 0.055) 1px,
+        rgba(0, 0, 0, 0) 1px,
+        rgba(0, 0, 0, 0) 9px
+      ),
+      radial-gradient(130% 110% at 50% 45%, rgba(0, 0, 0, 0) 38%, rgba(0, 0, 0, 0.38) 100%),
+      linear-gradient(168deg, #830101 0%, #7c0101 46%, #6a0101 100%);
+  }
+
+  /*
+     Solo el acceso sube bajo la barra fija, con el mismo truco que usa
+     .page-hero, de modo que ocupa el viewport entero: asi la tarjeta se centra
+     en el centro real de la pantalla y el pie queda justo en el pliegue. El
+     portal y el panel son paginas largas que arrancan debajo de la barra.
+  */
+  .ingreso-guindo {
+    margin-top: calc(-1 * var(--header-h));
+  }
+
+  /* Nav item hover pill (Elementor "pointer background") */
+  .nav-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    --nav-pad: 20px;
+    padding: 15px var(--nav-pad);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    z-index: 1;
+  }
+  /* Subrayado minimalista: en lugar del antiguo contorno rojo va una sola
+     línea de marca que crece desde el centro al pasar el cursor o al marcar
+     la pestaña activa. */
+  .nav-item::before {
+    content: '';
+    position: absolute;
+    left: var(--nav-pad);
+    right: var(--nav-pad);
+    bottom: 7px;
+    height: 3px;
+    border-radius: 3px;
+    background-color: var(--color-brand);
+    opacity: 0;
+    transform: scaleX(0.25);
+    transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+  }
+  .nav-item:hover::before,
+  .nav-item.is-active::before {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  .nav-item:hover {
+    color: #fff;
+  }
+}
+
+/* Elementor's entrance animations */
+@keyframes elementorFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Sin animaciones en el sitio. Por pedido del cliente se eliminan TODAS las
+   animaciones y transiciones salvo las de la barra de navegacion (#site-header
+   y sus .nav-item).
+
+   Se apaga todo con un selector sencillo y despues se re-activan, con mas
+   especificidad y !important, solo las de la barra: asi su desvanecido al
+   hacer scroll y el subrayado que crece al pasar el cursor siguen funcionando.
+--------------------------------------------------------------------------- */
+html,
+body,
+body *,
+body *::before,
+body *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  animation-delay: 0ms !important;
+  transition-duration: 0.001ms !important;
+  transition-delay: 0ms !important;
+}
+
+/* La barra de navegacion conserva su animacion. */
+#site-header {
+  animation: none !important;
+  transition-duration: 550ms, 550ms, 550ms !important;
+  transition-property: --nav-cover, --nav-bar, background-color !important;
+  transition-timing-function: ease-in-out, ease-in-out, ease-in-out !important;
+  transition-delay: 0s, 0s, 0s !important;
+}
+
+#site-header .nav-item::before {
+  animation: none !important;
+  transition-duration: 0.3s, 0.35s !important;
+  transition-property: opacity, transform !important;
+  transition-timing-function: ease, cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-delay: 0s, 0s !important;
+}
+
+/* El carrusel de los encabezados tambien conserva su animacion: es la unica
+   otra excepcion, pedida para que el cambio de foto se vea cinematografico.
+   La escala se transiciona (no se anima con @keyframes) para que el
+   acercamiento sea continuo y no vuelva de golpe al tamano original. */
+.page-hero-slide {
+  transition-duration: 1600ms, 9000ms !important;
+  transition-property: opacity, transform !important;
+  transition-timing-function: ease-in-out, linear !important;
+  transition-delay: 0s, 0s !important;
+}
+
+.page-hero,
+.page-hero .page-hero-veil {
+  transition-duration: 700ms !important;
+  transition-property: opacity !important;
+  transition-timing-function: ease-in-out !important;
+  transition-delay: 0s !important;
+}
+
+.page-hero > .ebim-container {
+  animation-duration: 900ms !important;
+  animation-iteration-count: 1 !important;
+  animation-delay: 0s !important;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1) !important;
+  animation-fill-mode: both !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Aparicion al hacer scroll.
+
+   Se aplica a TODAS las páginas públicas (cada bloque de contenido lleva
+   [data-reveal]); la barra de navegación y el pie de página quedan fuera.
+
+   Cada bloque arranca un poco más abajo y sin opacidad; cuando entra en
+   pantalla, el JavaScript le pone .is-visible y sube hasta su sitio con un
+   fade in. La animación se ejecuta UNA sola vez por bloque y no se repite ni
+   se reinicia: al terminar queda fijo en su posición final, de modo que el
+   contenido nunca vuelve a moverse.
+
+   Es corta (600 ms) y de recorrido pequeño (24 px) para que se note sin
+   hacerse pesada; la curva de salida rápida la hace sentir ligera y elegante.
+
+   Va aquí, junto a las demás excepciones, porque la regla general de arriba
+   apaga todas las animaciones del sitio.
+--------------------------------------------------------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-visible {
+  animation-name: revelarContenido;
+  animation-duration: 600ms !important;
+  animation-iteration-count: 1 !important;
+  animation-delay: var(--reveal-delay, 0s) !important;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1) !important;
+  animation-fill-mode: both !important;
+}
+
+@keyframes revelarContenido {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Quien pida menos movimiento ve el contenido directamente, sin desplazamiento
+   ni animacion: la pagina sigue siendo completamente legible. */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+  [data-reveal].is-visible {
+    animation: none !important;
+  }
+}
+
+/* FAQ accordion: plus rotates into a close cross on open */
+[data-accordion] [data-accordion-item][data-open='true'] [data-accordion-icon] {
+  transform: rotate(45deg);
+}
+
+/* ---------------------------------------------------------------------------
+   Plan de estudios desplegable (Oferta Académica)
+
+   Excepción al apagado general de animaciones: al abrir, la rejilla de años
+   se despliega hacia abajo con un cambio suave de altura (0fr -> 1fr) y un
+   leve desvanecido. El "+" gira a "x" en el mismo tiempo. Al cerrar ocurre
+   lo mismo en sentido contrario.
+--------------------------------------------------------------------------- */
+.plan-desplegable {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition-property: grid-template-rows, opacity !important;
+  transition-duration: 460ms, 300ms !important;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1), ease !important;
+  transition-delay: 0s, 0s !important;
+}
+
+.plan-desplegable > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
+[data-accordion-item][data-open='true'] > .plan-desplegable {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.plan-icono {
+  transition-property: transform !important;
+  transition-duration: 300ms !important;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1) !important;
+  transition-delay: 0s !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-desplegable,
+  .plan-icono {
+    transition: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Especialidades instrumentales del inicio: la animacion vuelve a ser la de
+   antes (las fichas se desplazan en bucle continuo). El desvanecido de los
+   extremos hace que entren y salgan del marco en lugar de cortarse de golpe
+   contra los bordes de la ventana.
+--------------------------------------------------------------------------- */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ss-marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
+}
+
+/* El desplazamiento de las fichas tambien queda activo: es la animacion pedida
+   para esta seccion, junto con la barra de navegacion y el carrusel. */
+.ss-marquee-track {
+  animation: marquee 40s linear infinite !important;
+}
+
+/* La galeria de "Nuestra historia" (Inicio) tambien conserva su movimiento:
+   es la animacion pedida para ese bloque. */
+.ss-galeria-pista {
+  transition-duration: 900ms !important;
+  transition-property: transform !important;
+  transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1) !important;
+  transition-delay: 0s !important;
+}
+
+/* Al cerrar cada vuelta el orden de las fotos se reacomoda sin animacion. Esta
+   clase gana por especificidad a la regla anterior, que tambien usa !important. */
+.ss-galeria-pista.ss-galeria-pista--reset {
+  transition-duration: 0s !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Galeria de "Nuestra historia" (Inicio).
+
+   Sin desvanecido: la foto se ve entera, de borde a borde, tanto quieta como
+   mientras se mueve. La pista es una fila de diapositivas del mismo ancho y el
+   JavaScript la empuja hacia la izquierda; al final reacomoda el orden para
+   seguir avanzando siempre en el mismo sentido.
+
+   Cada diapositiva es una columna: la foto arriba y su propia leyenda debajo,
+   asi que imagen y texto viajan juntos y salen juntos.
+--------------------------------------------------------------------------- */
+.ss-galeria-envoltorio {
+  position: relative;
+  flex: 1;
+  min-height: 320px;
+}
+
+.ss-galeria {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.ss-galeria-pista {
+  display: flex;
+  height: 100%;
+  will-change: transform;
+}
+
+.ss-galeria-slide {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.ss-galeria-foto {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 25px;
+}
+
+.ss-galeria-foto img {
+  display: block;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.ss-galeria-texto {
+  flex-shrink: 0;
+  margin: 0;
+  padding-top: 16px;
+  min-height: 48px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-slate);
+}
+
+@media (max-width: 767px) {
+  .ss-galeria-envoltorio {
+    min-height: 340px;
+  }
+
+  .ss-galeria-texto {
+    min-height: 72px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Elementor justified gallery (Elementor gallery.js layout reimplemented).
+   Items are sized by JS via [data-ss-justified]; these rules only make the
+   image fill the item box and stack the hover overlay correctly.
+--------------------------------------------------------------------------- */
+[data-ss-justified] {
+  align-items: flex-start;
+}
+[data-ss-justified] .e-gallery-item {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+[data-ss-justified] .e-gallery-item .e-gallery-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+}
+[data-ss-justified] .elementor-gallery-item__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+}
+[data-ss-justified] .e-gallery-item:hover .elementor-gallery-item__overlay {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Home hero: fills the viewport and dissolves into the page at the bottom.
+   .ss-hero-fade melts the photo into the page background (mist) so the hero
+   ends with no seam, hard edge or visible line.
+--------------------------------------------------------------------------- */
+.ss-hero {
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* Slide the hero up under the sticky header so it reads as one full-bleed
+     viewport, with the header floating over the photo. */
+  margin-top: calc(-1 * var(--header-h));
+}
+
+.ss-hero-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 14%;
+  z-index: 1;
+  pointer-events: none;
+  /* Dissolves the photo into the black band that follows the hero. Kept short
+     and low so the black appears only near the fold; the last stops reach the
+     solid colour so the hero ends with no seam or visible edge. */
+  background-image: linear-gradient(
+    to bottom,
+    rgba(29, 29, 29, 0) 0%,
+    rgba(29, 29, 29, 0.05) 34%,
+    rgba(29, 29, 29, 0.24) 64%,
+    rgba(29, 29, 29, 0.66) 88%,
+    rgba(29, 29, 29, 1) 100%
+  );
+}
+
+/* Keep the hero copy above the fade and the divider. */
+.ss-hero > .elementor-element,
+.ss-hero > .e-con-inner {
+  position: relative;
+  z-index: 3;
+}
+
+/* ---------------------------------------------------------------------------
+   Banda de accesos: ocupa la pantalla completa.
+
+   El contenido (lema + cuatro fotos) se centra en el alto visible de la
+   ventana, de modo que al llegar a esta seccion se vea una pantalla entera de
+   negro con las fotos. El desvanecido NO va dentro de la banda: es la franja
+   .ss-banda-fade que viene despues, asi el negro solo empieza a apagarse
+   cuando el usuario sigue bajando.
+--------------------------------------------------------------------------- */
+.ss-banda-accesos {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* ---------------------------------------------------------------------------
+   Franja de desvanecido entre la banda negra y el fondo de la pagina.
+   Es larga y con varias paradas para que el negro se apague muy poco a poco y
+   no se distinga donde termina.
+--------------------------------------------------------------------------- */
+.ss-banda-fade {
+  height: 340px;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(29, 29, 29, 1) 0%,
+    rgba(29, 29, 29, 0.9) 16%,
+    rgba(29, 29, 29, 0.72) 36%,
+    rgba(29, 29, 29, 0.5) 56%,
+    rgba(29, 29, 29, 0.28) 76%,
+    rgba(29, 29, 29, 0.1) 91%,
+    rgba(29, 29, 29, 0) 100%
+  );
+}
+
+/* En pantallas de escritorio bajas (portatiles con las barras del navegador a
+   la vista) el contenido no cabe en una pantalla con los margenes grandes.
+   Se recorta el aire y la altura de las fotos para que la banda siga ocupando
+   exactamente el alto visible en lugar de desbordarse. */
+@media (min-width: 1024px) and (max-height: 799px) {
+  .ss-banda-accesos {
+    padding-top: 100px;
+    padding-bottom: 60px;
+  }
+  .ss-banda-rejilla {
+    margin-top: 40px;
+  }
+  .ss-banda-accesos a {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 767px) {
+  .ss-hero {
+    min-height: 100svh;
+  }
+  .ss-hero-fade {
+    height: 17%;
+  }
+  .ss-banda-fade {
+    height: 230px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Encabezado de las páginas interiores con fondo fotográfico.
+
+   Se usa sólo cuando la página tiene imágenes en
+   public/assets/ebim/paginas/<segmento-de-la-url>/; sin fotos el componente
+   renderiza el encabezado claro original. La banda se mete por debajo del
+   header fijo con el mismo truco que el hero de inicio, para que la foto sea
+   a sangre desde la primera línea y no quede una franja del color de la página
+   entre el menú y la foto.
+---------------------------------------------------------------------------- */
+.page-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-color: var(--color-ink);
+  /* Slide up under the sticky header so the photo reaches the very top. */
+  margin-top: calc(-1 * var(--header-h));
+  /* La foto cubre toda la pantalla y el texto queda centrado en la vertical.
+     100svh evita que en móviles la barra del navegador recorte el pie. */
+  height: 100vh;
+  height: 100svh;
+  padding: calc(var(--header-h) + 20px) 0 48px;
+}
+
+/* Velo sobre la foto: firme bajo el texto y más suave a la derecha, donde no
+   hay letras, para que la foto siga leyéndose y se vea cómo cambia. */
+.page-hero-veil {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    90deg,
+    rgba(29, 29, 29, 0.78) 0%,
+    rgba(29, 29, 29, 0.74) 55%,
+    rgba(29, 29, 29, 0.58) 100%
+  );
+}
+
+/* En pantallas estrechas el texto ocupa todo el ancho, así que el velo se
+   mantiene constante para que ninguna línea quede sobre la foto al descubierto. */
+@media (max-width: 767px) {
+  .page-hero {
+    padding: calc(var(--header-h) + 16px) 0 40px;
+  }
+  .page-hero-veil {
+    background-image: linear-gradient(
+      90deg,
+      rgba(29, 29, 29, 0.8) 0%,
+      rgba(29, 29, 29, 0.72) 100%
+    );
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Carrusel de los encabezados.
+
+   Es la UNICA animacion del sitio ademas de la barra de navegacion.
+
+   El movimiento es CONTINUO y no da saltos: cada foto vive siempre con una
+   transicion larguisima de escala (toda la duracion del carrusel). Cuando una
+   foto pasa a activa, su escala simplemente empieza a crecer de forma suave y
+   sostenida; cuando se apaga, sigue creciendo mientras se desvanece. Asi nunca
+   se ve el "rebobinado" al tamano original que hacia la version anterior, que
+   usaba un @keyframes que se reiniciaba en cada vuelta.
+
+   El acercamiento es leve (1 a 1.05, un 5%) y la deriva es minima, para que se
+   sienta vivo pero tranquilo, no un zoom agresivo.
+
+   Reglas:
+   - .page-hero-slide            -> capa de foto, oculta por defecto.
+   - .page-hero-slide.is-active  -> visible; el resto es transicion pura.
+   La deriva alterna de lado (.page-hero-slide--izq / --der) para que dos fotos
+   seguidas no se muevan igual.
+--------------------------------------------------------------------------- */
+.page-hero-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  opacity: 0;
+  transform: scale(1) translate3d(0, 0, 0);
+  /* Cruce largo y suave. La escala tambien transiciona, de modo que el
+     acercamiento es continuo y nunca vuelve de golpe al tamano original. */
+  transition:
+    opacity 1600ms ease-in-out,
+    transform 9000ms linear;
+  will-change: opacity, transform;
+}
+
+.page-hero-slide.is-active {
+  opacity: 1;
+  /* Acercamiento leve y sostenido. Al llegar casi al final de su turno la
+     siguiente foto ya esta entrando encima, asi que el relevo es continuo. */
+  transform: scale(1.05) translate3d(var(--deriva-x, 0), -0.6%, 0);
+}
+
+/* La deriva alterna de lado: unas fotos se desplazan un poco hacia un lado y
+   otras hacia el otro. El signo entra por --deriva-x. */
+.page-hero-slide--izq {
+  --deriva-x: -1%;
+}
+.page-hero-slide--der {
+  --deriva-x: 1%;
+}
+
+/* Modo "reinicio": devuelve la foto a su tamano original de inmediato, sin
+   transicion. Solo se aplica cuando la foto ya esta invisible (fuera de su
+   turno y con el desvanecido terminado), asi que el reinicio nunca se ve; sirve
+   para que la proxima vez que le toque vuelva a crecer desde 1.
+
+   Lleva !important porque la regla global que apaga las animaciones del sitio
+   tambien usa !important sobre transition-duration. */
+.page-hero-slide.page-hero-slide--reset {
+  opacity: 0;
+  transform: scale(1) translate3d(0, 0, 0);
+  transition-duration: 0s !important;
+}
+
+/* El velo "respira" con cada cambio: se oscurece un instante en el cruce y
+   vuelve a su tono, de modo que el cambio de foto se siente intencional. */
+.page-hero.is-switching .page-hero-veil {
+  opacity: 1;
+}
+.page-hero .page-hero-veil {
+  transition: opacity 700ms ease-in-out;
+}
+
+/* El texto entra con un levante muy suave al cargar el encabezado. */
+.page-hero > .ebim-container {
+  animation: pageHeroTexto 900ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes pageHeroTexto {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Quien pida menos movimiento recibe solo el cruce, sin acercamiento. */
+@media (prefers-reduced-motion: reduce) {
+  .page-hero-slide {
+    transition: opacity 1600ms ease-in-out;
+  }
+  .page-hero-slide.is-active {
+    transform: none;
+  }
+  .page-hero > .ebim-container {
+    animation: none;
+  }
+}
+
+/* El texto del encabezado se lee en blanco sobre la foto. Va sin capa para
+   ganarle especificidad a .page-prose, que fija el tinta por defecto. */
+.page-hero .page-prose {
+  color: #fff;
+}
+
+/* En anchos justos (1024–1199) el menú necesita algo más de holgura
+   porque el logo ahora es más ancho. */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .nav-item {
+    --nav-pad: 15px;
+    padding-left: var(--nav-pad);
+    padding-right: var(--nav-pad);
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Rejilla de Valores (página Sobre EBIM).
+
+   Una columna por valor, todas del mismo ancho para que la fila quede
+   simétrica. Las columnas se calculan con --columnas-valores, que la vista
+   escribe a partir de la cantidad real de valores guardados: si mañana se
+   agrega o se quita uno, la rejilla se reparte sola.
+
+   Las tarjetas pares (.valores-bajada) se desplazan hacia abajo para romper la
+   línea recta y dar ritmo; es un detalle de composición, no un desalineado.
+
+   Por debajo de 768px no caben cinco columnas: la rejilla se pliega a una sola
+   columna y las tarjetas pasan a fila (número a la izquierda, texto a la
+   derecha). El desplazamiento alterno se anula.
+---------------------------------------------------------------------------- */
+.valores-rejilla {
+  grid-template-columns: repeat(var(--columnas-valores, 3), minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .valores-bajada {
+    margin-top: 26px;
+  }
+}
+
+@media (max-width: 767px) {
+  .valores-rejilla {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .valores-bajada {
+    margin-top: 0;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Ventana emergente de "Ver ejemplo" (Inscripción).
+
+   Muestra únicamente la imagen del documento de muestra sobre un fondo oscuro,
+   sin lector de PDF ni pestaña nueva. La foto queda entera: la X se apoya en la
+   esquina de la ventana, no encima del contenido. Se cierra con la X, tocando
+   el fondo o con Esc.
+---------------------------------------------------------------------------- */
+.ss-modal {
+  position: fixed;
+  inset: 0;
+  /* Por encima de la barra de navegación (z-index 100), para que el fondo
+     oscuro cubra también el encabezado mientras la ventana está abierta. */
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+
+.ss-modal[hidden] {
+  display: none;
+}
+
+.ss-modal-fondo {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.86);
+  cursor: pointer;
+}
+
+.ss-modal-caja {
+  position: relative;
+  max-width: min(520px, 100%);
+  max-height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.ss-modal-imagen {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 56px);
+  object-fit: contain;
+}
+
+.ss-modal-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(17, 17, 17, 0.9);
+  color: #fff;
+  cursor: pointer;
+}
+
+.ss-modal-cerrar:hover,
+.ss-modal-cerrar:focus-visible {
+  background: var(--color-brand);
+}
+
+@media (max-width: 767px) {
+  .ss-modal {
+    padding: 16px;
+  }
+
+  .ss-modal-caja {
+    max-width: 100%;
+  }
+
+  .ss-modal-imagen {
+    max-height: calc(100svh - 32px);
+  }
+}
+
+
+/* ----------------------------------------------------------------------------
+   Avisos flotantes (mensajes de exito y error).
+
+   Sustituyen a los bloques que antes se insertaban al inicio de <main> y
+   empujaban el titulo de la pagina: ahora flotan sobre la esquina superior
+   derecha (en movil, sobre el borde inferior), no ocupan espacio en el flujo y
+   se retiran solos. El boton de la X los cierra antes.
+
+   El kill-switch global apaga las animaciones; .ebim-aviso y su estado de
+   salida son una excepcion, con mas especificidad y !important.
+---------------------------------------------------------------------------- */
+.ebim-avisos {
+  position: fixed;
+  top: calc(var(--header-h) + 16px);
+  right: 20px;
+  /* Por encima del contenido y de la barra (z-index 100), por debajo de la
+     ventana emergente de "Ver ejemplo" (120). */
+  z-index: 110;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(420px, calc(100vw - 40px));
+  pointer-events: none;
+}
+
+.ebim-aviso {
+  --aviso-color: #1f7a44;
+  --aviso-fondo: #e7f6ec;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 15px 14px 15px 16px;
+  border-left: 6px solid var(--aviso-color);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--color-ink);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+  pointer-events: auto;
+  animation: avisoEntra 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-duration: 340ms !important;
+  animation-delay: 0s !important;
+}
+
+.ebim-aviso--error {
+  --aviso-color: var(--color-brand);
+  --aviso-fondo: #fdecee;
+}
+
+.ebim-aviso__icono {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--aviso-fondo);
+  color: var(--aviso-color);
+}
+
+.ebim-aviso__icono svg {
+  width: 19px;
+  height: 19px;
+}
+
+.ebim-aviso__cuerpo {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.ebim-aviso__titulo {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--aviso-color);
+}
+
+.ebim-aviso__mensaje {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--color-ink);
+}
+
+.ebim-aviso__cerrar {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-slate);
+  cursor: pointer;
+}
+
+.ebim-aviso__cerrar:hover,
+.ebim-aviso__cerrar:focus-visible {
+  background: var(--color-mist);
+  color: var(--color-ink);
+}
+
+.ebim-aviso__cerrar svg {
+  width: 15px;
+  height: 15px;
+}
+
+.ebim-aviso.is-saliendo {
+  animation-name: avisoSale !important;
+  animation-duration: 240ms !important;
+  animation-timing-function: ease-in !important;
+  animation-fill-mode: both !important;
+}
+
+@keyframes avisoEntra {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes avisoSale {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+/* En movil el aviso se apoya abajo para no tapar el titulo de la pagina. */
+@media (max-width: 767px) {
+  .ebim-avisos {
+    top: auto;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: auto;
+  }
+
+  .ebim-aviso {
+    animation-name: avisoEntraMovil;
+  }
+
+  .ebim-aviso.is-saliendo {
+    animation-name: avisoSaleMovil !important;
+  }
+}
+
+@keyframes avisoEntraMovil {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes avisoSaleMovil {
+  to {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ebim-aviso {
+    animation: none !important;
+  }
+
+  .ebim-aviso.is-saliendo {
+    opacity: 0;
+  }
+}

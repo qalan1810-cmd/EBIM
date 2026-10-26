@@ -1,0 +1,56 @@
+.elementor-24473 .elementor-element.elementor-element-f948c88 > .elementor-container{max-width:1400px;min-height:350px;}.elementor-24473 .elementor-element.elementor-element-f948c88:not(.elementor-motion-effects-element-type-background), .elementor-24473 .elementor-element.elementor-element-f948c88 > .elementor-motion-effects-container > .elementor-motion-effects-layer{background-position:center center;background-size:cover;}.elementor-24473 .elementor-element.elementor-element-f948c88, .elementor-24473 .elementor-element.elementor-element-f948c88 > .elementor-background-overlay{border-radius:0px 0px 050px 50px;}.elementor-24473 .elementor-element.elementor-element-f948c88{transition:background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s;margin-top:-100px;margin-bottom:0px;}.elementor-24473 .elementor-element.elementor-element-f948c88 > .elementor-background-overlay{transition:background 0.3s, border-radius 0.3s, opacity 0.3s;}.elementor-24473 .elementor-element.elementor-element-9053609 > .elementor-element-populated{padding:350px 0px 0px 0px;}.elementor-24473 .elementor-element.elementor-element-496931a{--display:flex;--flex-direction:row;--container-widget-width:initial;--container-widget-height:100%;--container-widget-flex-grow:1;--container-widget-align-self:stretch;--flex-wrap-mobile:wrap;--gap:150px 150px;--row-gap:150px;--column-gap:150px;--padding-top:5%;--padding-bottom:5%;--padding-left:5%;--padding-right:5%;}.elementor-24473 .elementor-element.elementor-element-7a6eea6{--display:flex;}.elementor-widget-heading .elementor-heading-title{font-family:var( --e-global-typography-primary-font-family ), Sans-serif;font-weight:var( --e-global-typography-primary-font-weight );color:var( --e-global-color-primary );}.elementor-24473 .elementor-element.elementor-element-8b70d1a > .elementor-widget-container{margin:0px 0px 0px 0px;}.elementor-24473 .elementor-element.elementor-element-8b70d1a{text-align:start;}.elementor-24473 .elementor-element.elementor-element-8b70d1a .elementor-heading-title{font-family:"Satoshi", Sans-serif;font-size:70px;font-weight:900;text-transform:none;color:var( --e-global-color-4c30cab );}.elementor-widget-text-editor{font-family:var( --e-global-typography-text-font-family ), Sans-serif;font-weight:var( --e-global-typography-text-font-weight );color:var( --e-global-color-text );}.elementor-widget-text-editor.elementor-drop-cap-view-stacked .elementor-drop-cap{background-color:var( --e-global-color-primary );}.elementor-widget-text-editor.elementor-drop-cap-view-framed .elementor-drop-cap, .elementor-widget-text-editor.elementor-drop-cap-view-default .elementor-drop-cap{color:var( --e-global-color-primary );border-color:var( --e-global-color-primary );}.elementor-24473 .elementor-element.elementor-element-54a9778{width:100%;max-width:100%;font-family:"Satoshi", Sans-serif;font-size:20px;font-weight:400;line-height:1.4em;color:var( --e-global-color-4c30cab );}.elementor-24473 .elementor-element.elementor-element-54a9778 > .elementor-widget-container{padding:05% 0% 0% 0%;}@media(min-width:768px){.elementor-24473 .elementor-element.elementor-element-7a6eea6{--width:100%;}}@media(min-width:1367px){.elementor-24473 .elementor-element.elementor-element-f948c88:not(.elementor-motion-effects-element-type-background), .elementor-24473 .elementor-element.elementor-element-f948c88 > .elementor-motion-effects-container > .elementor-motion-effects-layer{background-attachment:scroll;}}@media(max-width:1024px){.elementor-24473 .elementor-element.elementor-element-496931a{--gap:50px 50px;--row-gap:50px;--column-gap:50px;}}@media(max-width:767px){.elementor-24473 .elementor-element.elementor-element-f948c88 > .elementor-container{min-height:300px;}.elementor-24473 .elementor-element.elementor-element-f948c88{margin-top:-100px;margin-bottom:0px;}.elementor-24473 .elementor-element.elementor-element-496931a{--gap:30px 30px;--row-gap:30px;--column-gap:30px;}.elementor-24473 .elementor-element.elementor-element-8b70d1a .elementor-heading-title{font-size:35px;line-height:1em;}.elementor-24473 .elementor-element.elementor-element-54a9778{width:100%;max-width:100%;}}/* Start Custom Fonts CSS */@font-face {
+	font-family: 'Satoshi';
+	font-style: normal;
+	font-weight: normal;
+	font-display: auto;
+	src: url(../fonts/Satoshi-Regular.eot);
+	src: url(../fonts/Satoshi-Regular.eot) format('embedded-opentype'),
+		url(../fonts/Satoshi-Regular.woff2) format('woff2'),
+		url(../fonts/Satoshi-Regular.woff) format('woff'),
+		url(../fonts/Satoshi-Regular.ttf) format('truetype');
+}
+@font-face {
+	font-family: 'Satoshi';
+	font-style: normal;
+	font-weight: bold;
+	font-display: auto;
+	src: url(../fonts/Satoshi-Bold.eot);
+	src: url(../fonts/Satoshi-Bold.eot) format('embedded-opentype'),
+		url(../fonts/Satoshi-Bold.woff2) format('woff2'),
+		url(../fonts/Satoshi-Bold-1.woff) format('woff'),
+		url(../fonts/Satoshi-Bold.ttf) format('truetype');
+}
+@font-face {
+	font-family: 'Satoshi';
+	font-style: italic;
+	font-weight: normal;
+	font-display: auto;
+	src: url(../fonts/Satoshi-Italic.eot);
+	src: url(../fonts/Satoshi-Italic.eot) format('embedded-opentype'),
+		url(../fonts/Satoshi-Italic.woff2) format('woff2'),
+		url(../fonts/Satoshi-Italic.woff) format('woff'),
+		url(../fonts/Satoshi-Italic.ttf) format('truetype');
+}
+@font-face {
+	font-family: 'Satoshi';
+	font-style: italic;
+	font-weight: bold;
+	font-display: auto;
+	src: url(../fonts/Satoshi-BoldItalic.eot);
+	src: url(../fonts/Satoshi-BoldItalic.eot) format('embedded-opentype'),
+		url(../fonts/Satoshi-BoldItalic.woff2) format('woff2'),
+		url(../fonts/Satoshi-BoldItalic.woff) format('woff'),
+		url(../fonts/Satoshi-BoldItalic.ttf) format('truetype');
+}
+@font-face {
+	font-family: 'Satoshi';
+	font-style: normal;
+	font-weight: 900;
+	font-display: auto;
+	src: url(../fonts/Satoshi-Black.eot);
+	src: url(../fonts/Satoshi-Black.eot) format('embedded-opentype'),
+		url(../fonts/Satoshi-Black.woff2) format('woff2'),
+		url(../fonts/Satoshi-Black.woff) format('woff'),
+		url(../fonts/Satoshi-Black.ttf) format('truetype');
+}
+/* End Custom Fonts CSS */

@@ -1,0 +1,57 @@
+FOTOS DE PORTADA POR PESTAÑA — Cómo agregarlas
+==============================================
+
+Cada pestaña del menú principal tiene su propia carpeta dentro de esta
+carpeta. Cualquier imagen que dejes ahí se muestra en el FONDO del encabezado
+de esa página y va cambiando sola cada 5 segundos.
+
+NO hace falta modificar ningún archivo del código: solo copia las fotos.
+
+Carpeta                       Pestaña
+---------------------------   -------------------------
+sobre-ebim/                   Sobre EBIM (antes "La Escuela")
+oferta-academica/             Oferta Académica
+inscripcion/                  Inscripción
+docentes/                     Docentes
+contacto/                     Contacto
+../home/                      Inicio (carrusel de la portada)
+
+
+CÓMO SE LLAMAN LOS ARCHIVOS
+---------------------------
+El orden en que cambian las fotos lo da el nombre del archivo (orden natural):
+de menor a mayor.
+
+  1.jpg  2.jpg  3.jpg  4.jpg   -> muestran en ese orden
+
+Si quieres dejar un hueco, omite el número: 1.jpg 3.jpg 4.jpg funciona igual.
+Con 3 a 5 fotos por carpeta el efecto se ve bien; más de 6 empieza a quedar
+rápido, porque cada una dura 5 segundos.
+
+
+FORMATO Y TAMAÑO
+----------------
+Extensiones admitidas:  .jpg  .jpeg  .png  .webp  .avif   (mayúsculas o no)
+
+  - Horizontal (apaisada), no vertical.
+  - Mínimo 1280 px de ancho; ideal 1920 px de ancho.
+  - Recorte aproximado 3:2 (1920x1280) o 16:9 (1920x1080).
+  - Sin marcas de agua ni texto encima.
+
+Las imágenes grandes se reducen automáticamente al mostrarse (background-size:
+cover), así que una foto de 4000 px funciona, pero carga más lento. Si puedes,
+bájalas antes de subirlas.
+
+
+CONTRASTE DEL TEXTO
+-------------------
+El título, la ruta de navegación y el párrafo de cada pestaña se escriben en
+blanco sobre un velo oscuro, así que el texto se lee igual de bien con una foto
+clara o con una oscura. Si una foto te parece demasiado oscura con el velo,
+puedo dejarla más visible (es un solo ajuste de CSS).
+
+
+SI LA CARPETA ESTÁ VACÍA
+------------------------
+La pestaña conserva exactamente su encabezado claro de siempre (fondo gris
+claro, texto oscuro). No se inventa ninguna imagen.

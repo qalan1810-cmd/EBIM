@@ -1,0 +1,56 @@
+.elementor-5265 .elementor-element.elementor-element-59ef77b4 > .elementor-container{max-width:1400px;min-height:350px;}.elementor-5265 .elementor-element.elementor-element-59ef77b4:not(.elementor-motion-effects-element-type-background), .elementor-5265 .elementor-element.elementor-element-59ef77b4 > .elementor-motion-effects-container > .elementor-motion-effects-layer{background-position:center center;background-size:cover;}.elementor-5265 .elementor-element.elementor-element-59ef77b4, .elementor-5265 .elementor-element.elementor-element-59ef77b4 > .elementor-background-overlay{border-radius:0px 0px 050px 50px;}.elementor-5265 .elementor-element.elementor-element-59ef77b4{transition:background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s;margin-top:-100px;margin-bottom:0px;}.elementor-5265 .elementor-element.elementor-element-59ef77b4 > .elementor-background-overlay{transition:background 0.3s, border-radius 0.3s, opacity 0.3s;}.elementor-5265 .elementor-element.elementor-element-24b78e5f > .elementor-element-populated{padding:350px 0px 0px 0px;}.elementor-5265 .elementor-element.elementor-element-377379c0{padding:04% 04% 04% 04%;}.elementor-widget-heading .elementor-heading-title{font-family:var( --e-global-typography-primary-font-family ), Sans-serif;font-weight:var( --e-global-typography-primary-font-weight );color:var( --e-global-color-primary );}.elementor-5265 .elementor-element.elementor-element-34f6f7de > .elementor-widget-container{margin:0px 0px 0px 0px;}.elementor-5265 .elementor-element.elementor-element-34f6f7de{text-align:start;}.elementor-5265 .elementor-element.elementor-element-34f6f7de .elementor-heading-title{font-family:"Satoshi", Sans-serif;font-size:70px;font-weight:900;text-transform:none;color:var( --e-global-color-4c30cab );}.elementor-widget-portfolio a .elementor-portfolio-item__overlay{background-color:var( --e-global-color-accent );}.elementor-widget-portfolio .elementor-portfolio-item__title{font-family:var( --e-global-typography-primary-font-family ), Sans-serif;font-weight:var( --e-global-typography-primary-font-weight );}.elementor-widget-portfolio .elementor-portfolio__filter{color:var( --e-global-color-text );font-family:var( --e-global-typography-primary-font-family ), Sans-serif;font-weight:var( --e-global-typography-primary-font-weight );}.elementor-widget-portfolio .elementor-portfolio__filter.elementor-active{color:var( --e-global-color-primary );}.elementor-5265 .elementor-element.elementor-element-caac6d5 .elementor-post__thumbnail__link{padding-bottom:calc( 1 * 100% );}.elementor-5265 .elementor-element.elementor-element-caac6d5:after{content:"1";position:absolute;color:transparent;}.elementor-5265 .elementor-element.elementor-element-caac6d5{--grid-row-gap:40px;--grid-column-gap:40px;}.elementor-5265 .elementor-element.elementor-element-caac6d5 a .elementor-portfolio-item__overlay{background-color:var( --e-global-color-c477b63 );}.elementor-5265 .elementor-element.elementor-element-caac6d5 a .elementor-portfolio-item__title{color:#FFFFFF;}.elementor-5265 .elementor-element.elementor-element-caac6d5 .elementor-portfolio-item__title{font-weight:600;}.elementor-5265 .elementor-element.elementor-element-caac6d5 .elementor-portfolio__filter{color:var( --e-global-color-4c30cab );font-size:26px;font-weight:600;}.elementor-5265 .elementor-element.elementor-element-caac6d5 .elementor-portfolio__filter.elementor-active{color:var( --e-global-color-c477b63 );}.elementor-5265 .elementor-element.elementor-element-caac6d5 .elementor-portfolio__filter:not(:last-child){margin-right:calc(10px/2);}.elementor-5265 .elementor-element.elementor-element-caac6d5 .elementor-portfolio__filter:not(:first-child){margin-left:calc(10px/2);}.elementor-5265 .elementor-element.elementor-element-caac6d5 .elementor-portfolio__filters{margin-bottom:25px;}body.elementor-page-5265:not(.elementor-motion-effects-element-type-background), body.elementor-page-5265 > .elementor-motion-effects-container > .elementor-motion-effects-layer{background-color:var( --e-global-color-9a2f379 );}@media(min-width:1367px){.elementor-5265 .elementor-element.elementor-element-59ef77b4:not(.elementor-motion-effects-element-type-background), .elementor-5265 .elementor-element.elementor-element-59ef77b4 > .elementor-motion-effects-container > .elementor-motion-effects-layer{background-attachment:scroll;}}@media(max-width:767px){.elementor-5265 .elementor-element.elementor-element-59ef77b4 > .elementor-container{min-height:300px;}.elementor-5265 .elementor-element.elementor-element-59ef77b4{margin-top:-100px;margin-bottom:0px;}.elementor-5265 .elementor-element.elementor-element-34f6f7de .elementor-heading-title{font-size:35px;line-height:1em;}}/* Start Custom Fonts CSS */@font-face {
+	font-family: 'Satoshi';
+	font-style: normal;
+	font-weight: normal;
+	font-display: auto;
+	src: url(../fonts/Satoshi-Regular.eot);
+	src: url(../fonts/Satoshi-Regular.eot) format('embedded-opentype'),
+		url(../fonts/Satoshi-Regular.woff2) format('woff2'),
+		url(../fonts/Satoshi-Regular.woff) format('woff'),
+		url(../fonts/Satoshi-Regular.ttf) format('truetype');
+}
+@font-face {
+	font-family: 'Satoshi';
+	font-style: normal;
+	font-weight: bold;
+	font-display: auto;
+	src: url(../fonts/Satoshi-Bold.eot);
+	src: url(../fonts/Satoshi-Bold.eot) format('embedded-opentype'),
+		url(../fonts/Satoshi-Bold.woff2) format('woff2'),
+		url(../fonts/Satoshi-Bold-1.woff) format('woff'),
+		url(../fonts/Satoshi-Bold.ttf) format('truetype');
+}
+@font-face {
+	font-family: 'Satoshi';
+	font-style: italic;
+	font-weight: normal;
+	font-display: auto;
+	src: url(../fonts/Satoshi-Italic.eot);
+	src: url(../fonts/Satoshi-Italic.eot) format('embedded-opentype'),
+		url(../fonts/Satoshi-Italic.woff2) format('woff2'),
+		url(../fonts/Satoshi-Italic.woff) format('woff'),
+		url(../fonts/Satoshi-Italic.ttf) format('truetype');
+}
+@font-face {
+	font-family: 'Satoshi';
+	font-style: italic;
+	font-weight: bold;
+	font-display: auto;
+	src: url(../fonts/Satoshi-BoldItalic.eot);
+	src: url(../fonts/Satoshi-BoldItalic.eot) format('embedded-opentype'),
+		url(../fonts/Satoshi-BoldItalic.woff2) format('woff2'),
+		url(../fonts/Satoshi-BoldItalic.woff) format('woff'),
+		url(../fonts/Satoshi-BoldItalic.ttf) format('truetype');
+}
+@font-face {
+	font-family: 'Satoshi';
+	font-style: normal;
+	font-weight: 900;
+	font-display: auto;
+	src: url(../fonts/Satoshi-Black.eot);
+	src: url(../fonts/Satoshi-Black.eot) format('embedded-opentype'),
+		url(../fonts/Satoshi-Black.woff2) format('woff2'),
+		url(../fonts/Satoshi-Black.woff) format('woff'),
+		url(../fonts/Satoshi-Black.ttf) format('truetype');
+}
+/* End Custom Fonts CSS */
