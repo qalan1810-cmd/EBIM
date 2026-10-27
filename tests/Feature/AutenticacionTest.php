@@ -53,12 +53,75 @@ class AutenticacionTest extends TestCase
         $this->assertAuthenticatedAs($estudiante);
     }
 
+    public function test_un_estudiante_ingresa_con_su_codigo_y_contrasena_generada(): void
+    {
+        $estudiante = User::create([
+            'name' => 'Nayra Pérez',
+            'role' => 'estudiante',
+            'codigo' => '6509',
+            'carnet' => '7084785',
+            'password' => '7084785nayraperez',
+        ]);
+
+        $this->post('/ingresar', [
+            'login' => '6509',
+            'password' => '7084785nayraperez',
+        ])->assertRedirect(route('portal.index'));
+
+        $this->assertAuthenticatedAs($estudiante);
+    }
+
+    public function test_la_contrasena_inicial_se_genera_del_carnet_y_el_nombre(): void
+    {
+        $this->assertSame(
+            '7084785josequia',
+            User::generarPasswordEstudiante('7084785', 'José Raúl Quia Calizaya')
+        );
+
+        $this->assertSame(
+            '7123456nayraperez',
+            User::generarPasswordEstudiante('7123456', 'Nayra Pérez')
+        );
+    }
+
+    public function test_un_codigo_incorrecto_no_autentica(): void
+    {
+        User::create([
+            'name' => 'Nayra Pérez',
+            'role' => 'estudiante',
+            'codigo' => '6509',
+            'carnet' => '7084785',
+            'password' => '7084785nayraperez',
+        ]);
+
+        $this->post('/ingresar', [
+            'login' => '9999',
+            'password' => '7084785nayraperez',
+        ])->assertSessionHasErrors('login');
+
+        $this->assertGuest();
+    }
+
+    public function test_el_login_exige_codigo_o_correo_y_contrasena(): void
+    {
+        $this->from('/ingresar')
+            ->post('/ingresar', [
+                'login' => '',
+                'password' => '',
+            ])
+            ->assertRedirect('/ingresar')
+            ->assertSessionHasErrors([
+                'login' => 'Ingrese su código de estudiante o correo electrónico.',
+                'password' => 'La contraseña es obligatoria.',
+            ]);
+    }
+
     public function test_un_admin_ingresa_y_es_redirigido_al_panel(): void
     {
         $admin = $this->admin();
 
         $this->post('/ingresar', [
-            'email' => $admin->email,
+            'login' => $admin->email,
             'password' => 'secreto123',
         ])->assertRedirect(route('admin.dashboard'));
 

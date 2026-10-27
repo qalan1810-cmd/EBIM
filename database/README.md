@@ -33,7 +33,7 @@ su forma de uso.
 
 | Tabla | Campos principales | Relaciones |
 |-------|--------------------|------------|
-| `users` | `name`, `email`, `password`, `role`, `codigo`, `curso_id`, `especialidad_id` | `curso_id → cursos.id`; `especialidad_id → especialidades.id`. |
+| `users` | `name`, `email` (opcional), `password`, `role`, `codigo`, `carnet`, `curso_id`, `especialidad_id` | `curso_id → cursos.id`; `especialidad_id → especialidades.id`. `codigo` y `carnet` son únicos. |
 | `cursos` | `nombre`, `orden`, `estado_horario`, datos de envío/revisión | `horario_enviado_por` y `horario_revisado_por → users.id`. |
 | `docentes` | `nombre`, `cargo`, `especialidad`, `formacion`, `experiencia`, `foto`, `encuadre`, `orden`, `activo` | Catálogo del plantel docente. |
 | `contenidos` | `clave`, `titulo`, `cuerpo`, `foto` | Textos institucionales editables. |
@@ -66,29 +66,66 @@ desde SQLite.
 
 | Tabla | Filas |
 |-------|------:|
-| `users` | 4 |
+| `users` | 5 |
 | `cursos` | 8 |
 | `especialidades` | 12 |
-| `asignaturas` | 20 |
+| `asignaturas` | 26 |
 | `horarios` | 120 |
-| `notas` | 8 |
+| `notas` | 0 |
 | `docentes` | 6 |
 | `contenidos` | 10 |
 | `noticias` | 6 |
 
-- **Promedio general de notas:** `82.50`.
-- **Contraseñas:** los 4 usuarios conservan su hash bcrypt original.
-- **Cursos 1 "A" y 2 "A":** horario **aprobado**.
-- **Cursos 3 "A", 1 "B", 2 "B", 3 "B", 4 "A" y 5 "A":** horario en **borrador**.
-- **María Condori Mamani:** 2 "A", Guitarra, gestión 2026, notas de los parciales 1 y 2,
-  promedio `82.50`.
-- **Juan Quispe Flores:** 3 "A", Canto, sin notas registradas.
-- Los IDs originales de usuarios, cursos, horarios y notas se conservaron.
+- **Usuarios:** quedaron únicamente los cinco estudiantes indicados por la institución.
+  No quedan cuentas de rectoría, dirección ni administración. Para volver a usar el panel
+  hay que crear una cuenta con rol `admin`.
+- **Contraseñas:** las cinco cuentas de estudiante usan la contraseña inicial derivada del
+  carnet y del nombre. Los hashes se guardan con bcrypt; no se almacena la contraseña en
+  texto plano.
+- **Correo:** los estudiantes no tienen correo electrónico registrado (`email = NULL`).
+  El personal autorizado, si se vuelve a crear, sigue ingresando con correo.
+- **Cursos:** Cristian Quiuchaca Chipana, Joel Daniel Ururi Choquetilla, José Raúl Quia
+  Calizaya y Julio Wilfredo Roque Copa están asignados a 2.º «A» (`curso_id = 2`) y ven su
+  horario aprobado. Nayra Pérez queda sin curso porque su caso especial y su horario todavía
+  no fueron proporcionados. Los cinco estudiantes tienen la especialidad **Guitarra**
+  (`especialidad_id = 2`), que se muestra en su perfil.
+- **Notas:** las 8 notas de demostración pertenecían a la estudiante de prueba que fue
+  eliminada; la clave foránea `notas.user_id` usa `ON DELETE CASCADE`, por lo que también
+  se eliminaron. La base actual no tiene notas registradas. El registro de notas del panel
+  solo incluye estudiantes con curso asignado; Nayra queda fuera hasta que se le asigne uno.
+- **Horarios:** se conservan los 120 registros. El horario de 2.º «A» fue reemplazado por
+  el indicado para el curso: 15 franjas de lunes a viernes en las bandas 08:30–10:00,
+  10:00–11:30 y 11:30–13:00, y quedó en estado `aprobado` después de pasar por dirección
+  académica y rectoría. Los docentes se muestran por área («Docente de …») porque no se
+  proporcionaron nombres. Las referencias `horario_enviado_por` y `horario_revisado_por`
+  quedaron en `NULL` porque las cuentas temporales que intervinieron ya no existen.
+- **Reapertura:** si hace falta corregir un horario ya aprobado, el rector puede devolverlo
+  al director académico con una observación. Mientras se corrige, el curso deja de verlo
+  en el portal; al reenviarlo y aprobarlo, vuelve a publicarse.
 
 Durante la normalización se detectó que «Lenguaje Musical» (usada en horarios) y
 «Lenguaje musical» (usada en notas) eran la misma materia escrita con distinta mayúscula.
 El importador las unificó en una sola fila del catálogo y remapeó las notas; no se perdió
 ninguna calificación.
+
+Al cargar el horario de 2.º «A» se incorporaron al catálogo las asignaturas «Instrumento
+Complementario», «Lenguaje Musical 2», «Informática aplicada a la música», «Práctica
+Colectiva», «Historia de la música» y «Práctica Coral». El catálogo pasó de 20 a 26 filas.
+
+## Acceso de estudiantes
+
+Los estudiantes ingresan desde `/ingresar` con su **código numérico** (solo dígitos) y su
+contraseña. El código se guarda en `users.codigo` y es único.
+
+La contraseña inicial se genera con el **carnet**, el **primer nombre** y el **primer
+apellido**, en minúsculas, sin espacios, tildes ni signos. Para nombres con dos apellidos se
+toma el primero de ellos. Ejemplo: carnet `7084785`, nombre `Alan Quispe` → contraseña
+`7084785alanquispe`.
+
+El formulario de alta de estudiantes genera la contraseña automáticamente, la guarda como
+hash bcrypt y la muestra una sola vez al administrador después de registrar al estudiante.
+Si luego se edita el nombre o el carnet, la contraseña se vuelve a generar y se muestra de
+nuevo. El personal autorizado conserva el acceso por correo electrónico y contraseña manual.
 
 ## Restaurar el respaldo MySQL
 
@@ -135,6 +172,10 @@ Para cargar los datos de demostración:
 ```bash
 php artisan db:seed --force
 ```
+
+El seeder de usuarios crea las cuentas de ejemplo **solo si la tabla `users` está vacía**.
+Si ya existen usuarios, no los duplica ni reemplaza; esto evita que una ejecución accidental
+de `db:seed` vuelva a crear las cuentas de demostración sobre la base real.
 
 > No uses `php artisan migrate:fresh` ni `migrate:fresh --seed` sobre una base con datos
 > reales: elimina todas las tablas y vuelve a crearlas.
@@ -200,4 +241,4 @@ mysql -u root ebim -e "SELECT COUNT(*) FROM users; SELECT COUNT(*) FROM horarios
 php artisan test
 ```
 
-Resultado esperado de las pruebas: **72 pruebas aprobadas**.
+Resultado esperado de las pruebas: **80 pruebas aprobadas**.

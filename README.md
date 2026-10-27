@@ -91,16 +91,23 @@ datos reales.**
 
 ---
 
-## Usuarios de ejemplo
+## Acceso de usuarios
 
-> Los datos son **de ejemplo** y deben reemplazarse por la información oficial de la escuela.
+Los estudiantes ingresan desde `/ingresar` con su **código numérico** y su contraseña. La
+contraseña inicial se genera con el **carnet**, el **primer nombre** y el **primer apellido**
+(en minúsculas, sin espacios ni tildes). Ejemplo: carnet `7084785`, nombre `Alan Quispe` →
+`7084785alanquispe`.
 
-| Rol | Correo | Contraseña |
-|-----|--------|------------|
-| Rectoría (admin) | `rector@ebim.edu.bo` | `ebim2026` |
-| Dirección académica | `director@ebim.edu.bo` | `ebim2026` |
-| Estudiante | `estudiante@ebim.edu.bo` | `ebim2026` |
-| Estudiante | `estudiante2@ebim.edu.bo` | `ebim2026` |
+La base actual tiene únicamente las cinco cuentas de estudiante indicadas por la institución.
+Cristian, Joel, José y Julio están asignados a 2.º «A» y consultan el horario aprobado de ese
+curso; Nayra Pérez queda pendiente porque su caso especial y su horario aún no fueron
+proporcionados. Los cinco tienen la especialidad **Guitarra**, que se muestra en su perfil.
+No quedan cuentas de rectoría, dirección ni administración. Para volver a usar el panel hay
+que crear una cuenta con rol `admin`.
+
+Las credenciales iniciales se entregan al responsable de la institución y no se guardan en
+texto plano dentro del repositorio. El detalle del esquema y del flujo de alta está en
+[`database/README.md`](database/README.md).
 
 ---
 
@@ -126,13 +133,16 @@ datos reales.**
 | `/salir` | Autenticado | Cierre de sesión. |
 | `/portal` | Estudiante | Consulta de notas por gestión y horario de clases. |
 
-### Panel de administración (`/admin`, solo rol `admin`)
+### Panel de administración (`/admin`, roles `admin` y `director`)
+
+El rol `admin` (rectoría) administra todas las secciones; el rol `director` solo accede a
+Panel y Horarios.
 
 - **Panel**: resumen de docentes, estudiantes, notas, horarios y contenidos.
 - **Docentes**: alta, edición y baja del plantel.
 - **Contenidos**: edición de historia, misión, visión, valores, requisitos y pasos.
-- **Notas**: registro y actualización de notas por estudiante, gestión y parcial.
-- **Horarios**: elaboración, envío y aprobación del horario por curso.
+- **Notas**: registro y actualización de notas por estudiante, gestión y parcial. Solo se incluyen estudiantes con curso asignado; Nayra queda fuera mientras no tenga curso.
+- **Horarios**: dirección académica elabora y envía; rectoría aprueba o devuelve para corrección.
 - **Usuarios**: gestión de estudiantes y personal autorizado.
 
 ---
@@ -142,7 +152,7 @@ datos reales.**
 ```
 app/
   Http/Controllers/            Controladores públicos, de acceso, portal y admin
-  Http/Middleware/             EnsureUserIsAdmin (alias `admin`)
+  Http/Middleware/             EnsureUserHasRole (alias `role`)
   Models/                      Asignatura, Especialidad, Curso, Docente, Contenido, Nota, Horario, User
 config/ebim.php                Navegación, contacto y pie de página
 database/migrations/           Tablas del dominio, catálogos y normalización a 3FN

@@ -16,7 +16,7 @@
             <div class="w-full max-w-[480px] rounded-[25px] bg-white p-[40px] shadow-[0_22px_60px_rgba(0,0,0,0.38)] max-md:p-[26px]">
                 <h1 class="text-[36px] font-extrabold leading-[1.2] text-ink max-md:text-[28px]">Ingresar</h1>
                 <p class="mt-3 text-[17px] leading-[1.5] text-ink">
-                    Accede a tu <strong>Portal del Estudiante</strong> para consultar tus notas y horarios. El personal autorizado ingresa al panel de administración.
+                    Los estudiantes acceden con su <strong>código numérico</strong> y su contraseña. El personal autorizado ingresa con su correo electrónico.
                 </p>
 
                 @if ($errors->any())
@@ -29,14 +29,16 @@
                     @csrf
 
                     <div>
-                        <label for="email" class="mb-2 block text-[15px] font-bold text-ink">Correo electrónico</label>
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus
+                        <label for="login" class="mb-2 block text-[15px] font-bold text-ink">Código de estudiante o correo electrónico</label>
+                        <input id="login" name="login" type="text" value="{{ old('login', old('email')) }}" required autofocus
+                            autocomplete="username" placeholder="Ej. 6509 o correo@ejemplo.com"
                             class="w-full rounded-[15px] border-2 border-ink/20 bg-white px-4 py-3 text-[17px] text-ink outline-none focus:border-ink">
+                        <p class="mt-2 text-[15px] text-slate">Estudiantes: usen el código numérico asignado por la escuela.</p>
                     </div>
 
                     <div class="mt-5">
                         <label for="password" class="mb-2 block text-[15px] font-bold text-ink">Contraseña</label>
-                        <input id="password" name="password" type="password" required
+                        <input id="password" name="password" type="password" required autocomplete="current-password"
                             class="w-full rounded-[15px] border-2 border-ink/20 bg-white px-4 py-3 text-[17px] text-ink outline-none focus:border-ink">
                     </div>
 

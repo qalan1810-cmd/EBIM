@@ -123,8 +123,15 @@
                         </p>
                     @endif
 
-                    @if ($esRector && $curso->estado_horario === \App\Models\Curso::ESTADO_ENVIADO)
+                    @if ($esRector && in_array($curso->estado_horario, [\App\Models\Curso::ESTADO_ENVIADO, \App\Models\Curso::ESTADO_APROBADO], true))
                         <div class="mt-5 border-t border-ink/10 pt-5">
+                            @if ($curso->estado_horario === \App\Models\Curso::ESTADO_APROBADO)
+                                <p class="mb-4 text-[15px] leading-[1.5] text-slate">
+                                    Si necesita corregir un horario ya aprobado, devuélvalo al director académico.
+                                    El curso dejará de verlo hasta que se apruebe de nuevo.
+                                </p>
+                            @endif
+
                             <form method="POST" action="{{ route('admin.horarios.rechazar', $curso) }}" class="flex flex-wrap items-end gap-4">
                                 @csrf
 
@@ -141,7 +148,7 @@
 
                                 <button type="submit"
                                     class="rounded-[15px] border-2 border-brand px-6 py-[10px] text-[18px] font-bold text-brand hover:bg-brand hover:text-white">
-                                    Devolver con observaciones
+                                    {{ $curso->estado_horario === \App\Models\Curso::ESTADO_APROBADO ? 'Devolver para corrección' : 'Devolver con observaciones' }}
                                 </button>
                             </form>
                         </div>

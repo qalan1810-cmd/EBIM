@@ -11,9 +11,6 @@
                 Hola, {{ $estudiante->name }}
             </h1>
             <p class="mt-4 text-[20px] text-white max-md:text-[18px]">
-                @if ($estudiante->codigo)
-                    Código de estudiante: <strong>{{ $estudiante->codigo }}</strong> ·
-                @endif
                 Consulta tu situación académica y tus actividades programadas.
             </p>
         </div>
@@ -25,22 +22,26 @@
             <div class="rounded-[25px] bg-white p-[30px] shadow-[0_0_12px_rgba(0,0,0,0.12)] max-md:p-[20px]">
                 <h2 class="text-[32px] font-bold leading-[1.3] text-ink max-md:text-[26px]">Mi perfil</h2>
 
-                <dl class="mt-6 grid grid-cols-4 gap-[20px] max-lg:grid-cols-2 max-md:grid-cols-1">
-                    <div>
-                        <dt class="text-[14px] font-bold uppercase tracking-[1.5px] text-brand">Nombre completo</dt>
-                        <dd class="mt-1 text-[18px] text-ink">{{ $estudiante->name }}</dd>
+                <dl class="mt-6 grid grid-cols-5 gap-[20px] max-md:grid-cols-1">
+                    <div class="min-w-0">
+                        <dt class="flex items-end text-[14px] font-bold uppercase tracking-[1.5px] text-brand max-lg:text-[12px] max-lg:tracking-[1px] md:h-[60px] lg:h-[44px]">Nombre completo</dt>
+                        <dd class="mt-1 break-words text-[18px] text-ink">{{ $estudiante->name }}</dd>
                     </div>
-                    <div>
-                        <dt class="text-[14px] font-bold uppercase tracking-[1.5px] text-brand">Código de estudiante</dt>
-                        <dd class="mt-1 text-[18px] text-ink">{{ $estudiante->codigo ?: 'No asignado' }}</dd>
+                    <div class="min-w-0">
+                        <dt class="flex items-end text-[14px] font-bold uppercase tracking-[1.5px] text-brand max-lg:text-[12px] max-lg:tracking-[1px] md:h-[60px] lg:h-[44px]">Código de estudiante</dt>
+                        <dd class="mt-1 break-words text-[18px] text-ink">{{ $estudiante->codigo ?: 'No asignado' }}</dd>
                     </div>
-                    <div>
-                        <dt class="text-[14px] font-bold uppercase tracking-[1.5px] text-brand">Curso</dt>
-                        <dd class="mt-1 text-[18px] text-ink">{{ $curso->nombre ?? 'No asignado' }}</dd>
+                    <div class="min-w-0">
+                        <dt class="flex items-end text-[14px] font-bold uppercase tracking-[1.5px] text-brand max-lg:text-[12px] max-lg:tracking-[1px] md:h-[60px] lg:h-[44px]">Curso</dt>
+                        <dd class="mt-1 break-words text-[18px] text-ink">{{ $curso->nombre ?? 'No asignado' }}</dd>
                     </div>
-                    <div>
-                        <dt class="text-[14px] font-bold uppercase tracking-[1.5px] text-brand">Correo electrónico</dt>
-                        <dd class="mt-1 text-[18px] text-ink">{{ $estudiante->email }}</dd>
+                    <div class="min-w-0">
+                        <dt class="flex items-end text-[14px] font-bold uppercase tracking-[1.5px] text-brand max-lg:text-[12px] max-lg:tracking-[1px] md:h-[60px] lg:h-[44px]">Instrumento de especialidad</dt>
+                        <dd class="mt-1 break-words text-[18px] text-ink">{{ $estudiante->especialidad ?: 'No asignado' }}</dd>
+                    </div>
+                    <div class="min-w-0">
+                        <dt class="flex items-end text-[14px] font-bold uppercase tracking-[1.5px] text-brand max-lg:text-[12px] max-lg:tracking-[1px] md:h-[60px] lg:h-[44px]">Carnet de identidad</dt>
+                        <dd class="mt-1 break-words text-[18px] text-ink">{{ $estudiante->carnet ?: 'No asignado' }}</dd>
                     </div>
                 </dl>
             </div>

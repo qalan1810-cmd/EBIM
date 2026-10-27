@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'password',
         'role',
         'codigo',
+        'carnet',
         'curso_id',
         'especialidad_id',
     ];
@@ -75,6 +77,21 @@ class User extends Authenticatable
     public function getEspecialidadAttribute(): ?string
     {
         return $this->especialidadRel?->nombre;
+    }
+
+    /**
+     * Contraseña inicial de un estudiante: carnet, primer nombre y primer
+     * apellido, sin espacios, tildes ni signos. Ejemplo:
+     * 7084785 + Alan + Quispe = 7084785alanquispe.
+     */
+    public static function generarPasswordEstudiante(string $carnet, string $nombre): string
+    {
+        $partes = preg_split('/\s+/u', trim($nombre)) ?: [];
+        $indiceApellido = max(1, count($partes) - 2);
+        $base = $carnet.($partes[0] ?? '').($partes[$indiceApellido] ?? '');
+        $password = preg_replace('/[^a-z0-9]/', '', strtolower(Str::ascii($base)));
+
+        return $password !== '' ? $password : $carnet;
     }
 
     /**

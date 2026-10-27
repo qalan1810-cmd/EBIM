@@ -20,13 +20,26 @@
                 <a href="{{ route('admin.usuarios.create') }}" class="btn-ss">Nuevo usuario</a>
             </div>
 
+            @if (session('credenciales'))
+                @php($credenciales = session('credenciales'))
+                <div class="mt-6 rounded-[15px] border-l-[6px] border-brand bg-[#fdecee] px-4 py-4">
+                    <p class="text-[18px] font-bold text-ink">
+                        {{ ($credenciales['actualizada'] ?? false) ? 'Contraseña actualizada' : 'Credenciales del estudiante' }}
+                    </p>
+                    <p class="mt-2 text-[16px] text-ink">Código: <strong>{{ $credenciales['codigo'] }}</strong></p>
+                    <p class="text-[16px] text-ink">Contraseña: <strong>{{ $credenciales['password'] }}</strong></p>
+                    <p class="mt-2 text-[15px] text-slate">Entregue estos datos al estudiante. La contraseña no se vuelve a mostrar.</p>
+                </div>
+            @endif
+
             <div class="mt-6 overflow-x-auto">
-                <table class="w-full min-w-[820px] border-collapse">
+                <table class="w-full min-w-[1040px] border-collapse">
                     <thead>
                         <tr class="bg-ink text-left text-white">
                             <th class="px-4 py-3 text-[16px] font-bold">Nombre</th>
-                            <th class="px-4 py-3 text-[16px] font-bold">Correo</th>
                             <th class="px-4 py-3 text-[16px] font-bold">Código</th>
+                            <th class="px-4 py-3 text-[16px] font-bold">Carnet</th>
+                            <th class="px-4 py-3 text-[16px] font-bold">Correo</th>
                             <th class="px-4 py-3 text-[16px] font-bold">Curso</th>
                             <th class="px-4 py-3 text-[16px] font-bold">Rol</th>
                             <th class="px-4 py-3 text-[16px] font-bold">Acciones</th>
@@ -36,8 +49,9 @@
                         @forelse ($usuarios as $usuario)
                             <tr class="border-b border-mist">
                                 <td class="px-4 py-3 text-[16px] font-semibold text-ink">{{ $usuario->name }}</td>
-                                <td class="px-4 py-3 text-[16px] text-ink">{{ $usuario->email }}</td>
                                 <td class="px-4 py-3 text-[16px] text-ink">{{ $usuario->codigo ?: '—' }}</td>
+                                <td class="px-4 py-3 text-[16px] text-ink">{{ $usuario->carnet ?: '—' }}</td>
+                                <td class="px-4 py-3 text-[16px] text-ink">{{ $usuario->email ?: '—' }}</td>
                                 <td class="px-4 py-3 text-[16px] text-ink">{{ $usuario->curso->nombre ?? '—' }}</td>
                                 <td class="px-4 py-3 text-[16px] text-ink">
                                     <span class="rounded-full px-3 py-1 text-[14px] font-bold {{ $usuario->esEstudiante() ? 'bg-mist text-ink' : 'bg-[#fdecee] text-brand' }}">
@@ -62,7 +76,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-4 py-6 text-[17px] text-ink">No hay usuarios registrados.</td>
+                                <td colspan="7" class="px-4 py-6 text-[17px] text-ink">No hay usuarios registrados.</td>
                             </tr>
                         @endforelse
                     </tbody>

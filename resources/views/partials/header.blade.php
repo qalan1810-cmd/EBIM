@@ -100,7 +100,7 @@
                             </li>
                         </ul>
                     @else
-                        <a href="{{ route('login') }}" @class(['nav-item', 'is-active' => request()->routeIs('login')])>
+                        <a href="{{ route('login') }}" @class(['nav-item', 'nav-item--login', 'is-active' => request()->routeIs('login')])>
                             Ingresar
                         </a>
                     @endauth
@@ -196,7 +196,7 @@
                 </li>
             @else
                 <li>
-                    <a href="{{ route('login') }}" class="block py-3 text-[18px] font-semibold text-white">
+                    <a href="{{ route('login') }}" @class(['nav-login-mobile', 'is-active' => request()->routeIs('login')])>
                         Ingresar
                     </a>
                 </li>

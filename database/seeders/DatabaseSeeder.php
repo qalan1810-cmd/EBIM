@@ -54,6 +54,13 @@ class DatabaseSeeder extends Seeder
 
     private function usuarios(): void
     {
+        // Si la base ya tiene usuarios, no se vuelven a crear las cuentas de
+        // demostración. Así `db:seed` no reemplaza ni duplica a los estudiantes
+        // reales que se administran desde el panel.
+        if (User::query()->exists()) {
+            return;
+        }
+
         User::updateOrCreate(
             ['email' => 'rector@ebim.edu.bo'],
             [
@@ -77,9 +84,10 @@ class DatabaseSeeder extends Seeder
             ['email' => 'estudiante@ebim.edu.bo'],
             [
                 'name' => 'María Condori Mamani',
-                'password' => Hash::make('ebim2026'),
+                'password' => Hash::make(User::generarPasswordEstudiante('7000001', 'María Condori Mamani')),
                 'role' => 'estudiante',
-                'codigo' => '2026-001',
+                'codigo' => '6001',
+                'carnet' => '7000001',
             ]
         );
 
@@ -87,9 +95,10 @@ class DatabaseSeeder extends Seeder
             ['email' => 'estudiante2@ebim.edu.bo'],
             [
                 'name' => 'Juan Quispe Flores',
-                'password' => Hash::make('ebim2026'),
+                'password' => Hash::make(User::generarPasswordEstudiante('7000002', 'Juan Quispe Flores')),
                 'role' => 'estudiante',
-                'codigo' => '2026-002',
+                'codigo' => '6002',
+                'carnet' => '7000002',
             ]
         );
     }

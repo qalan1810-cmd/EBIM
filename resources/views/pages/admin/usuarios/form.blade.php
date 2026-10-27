@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
-@php($editando = $usuario->exists)
+@php
+    $editando = $usuario->exists;
+    $rolActual = old('role', $usuario->role ?? 'estudiante');
+    $esEstudiante = $rolActual === 'estudiante';
+@endphp
 
 @section('title', ($editando ? 'Editar usuario' : 'Nuevo usuario') . ' | Administración EBIM')
 
@@ -26,36 +30,60 @@
 
                 <div class="grid grid-cols-2 gap-[20px] max-md:grid-cols-1">
                     <div>
-                        <label for="name" class="mb-2 block text-[15px] font-bold text-ink">Nombre completo</label>
-                        <input id="name" name="name" type="text" value="{{ old('name', $usuario->name) }}" required
-                            class="w-full rounded-[15px] border-2 border-ink/20 bg-white px-4 py-3 text-[17px] text-ink outline-none focus:border-ink">
-                        @error('name') <p class="mt-1 text-[15px] font-semibold text-brand">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div>
-                        <label for="email" class="mb-2 block text-[15px] font-bold text-ink">Correo electrónico</label>
-                        <input id="email" name="email" type="email" value="{{ old('email', $usuario->email) }}" required
-                            class="w-full rounded-[15px] border-2 border-ink/20 bg-white px-4 py-3 text-[17px] text-ink outline-none focus:border-ink">
-                        @error('email') <p class="mt-1 text-[15px] font-semibold text-brand">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div>
                         <label for="role" class="mb-2 block text-[15px] font-bold text-ink">Rol</label>
                         <select id="role" name="role" required
                             class="w-full rounded-[15px] border-2 border-ink/20 bg-white px-4 py-3 text-[17px] text-ink outline-none focus:border-ink">
                             @foreach (\App\Models\User::roles() as $valor => $etiqueta)
-                                <option value="{{ $valor }}" @selected(old('role', $usuario->role) === $valor)>{{ $etiqueta }}</option>
+                                <option value="{{ $valor }}" @selected($rolActual === $valor)>{{ $etiqueta }}</option>
                             @endforeach
                         </select>
                         @error('role') <p class="mt-1 text-[15px] font-semibold text-brand">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label for="codigo" class="mb-2 block text-[15px] font-bold text-ink">Código de estudiante (opcional)</label>
-                        <input id="codigo" name="codigo" type="text" value="{{ old('codigo', $usuario->codigo) }}"
-                            placeholder="Ej. 2026-001"
+                        <label for="name" class="mb-2 block text-[15px] font-bold text-ink">Nombre completo</label>
+                        <input id="name" name="name" type="text" value="{{ old('name', $usuario->name) }}" required
                             class="w-full rounded-[15px] border-2 border-ink/20 bg-white px-4 py-3 text-[17px] text-ink outline-none focus:border-ink">
+                        @error('name') <p class="mt-1 text-[15px] font-semibold text-brand">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div data-solo-estudiante @if (! $esEstudiante) hidden @endif>
+                        <label for="codigo" class="mb-2 block text-[15px] font-bold text-ink">Código de estudiante</label>
+                        <input id="codigo" name="codigo" type="text" value="{{ old('codigo', $usuario->codigo) }}"
+                            inputmode="numeric" pattern="[0-9]+" data-requerido="1" @required($esEstudiante)
+                            placeholder="Ej. 6509" autocomplete="off"
+                            class="w-full rounded-[15px] border-2 border-ink/20 bg-white px-4 py-3 text-[17px] text-ink outline-none focus:border-ink">
+                        <p class="mt-2 text-[15px] text-slate">Solo números, sin puntos ni guiones. Es el usuario para ingresar.</p>
                         @error('codigo') <p class="mt-1 text-[15px] font-semibold text-brand">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div data-solo-estudiante @if (! $esEstudiante) hidden @endif>
+                        <label for="carnet" class="mb-2 block text-[15px] font-bold text-ink">Carnet de identidad</label>
+                        <input id="carnet" name="carnet" type="text" value="{{ old('carnet', $usuario->carnet) }}"
+                            inputmode="numeric" pattern="[0-9]+" data-requerido="1" @required($esEstudiante)
+                            placeholder="Ej. 7084785" autocomplete="off"
+                            class="w-full rounded-[15px] border-2 border-ink/20 bg-white px-4 py-3 text-[17px] text-ink outline-none focus:border-ink">
+                        <p class="mt-2 text-[15px] text-slate">Solo números. La contraseña inicial se genera con el carnet, el primer nombre y el primer apellido.</p>
+                        @error('carnet') <p class="mt-1 text-[15px] font-semibold text-brand">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div data-solo-personal @if ($esEstudiante) hidden @endif>
+                        <label for="email" class="mb-2 block text-[15px] font-bold text-ink">Correo electrónico</label>
+                        <input id="email" name="email" type="email" value="{{ old('email', $usuario->email) }}"
+                            data-requerido="1" @required(! $esEstudiante)
+                            class="w-full rounded-[15px] border-2 border-ink/20 bg-white px-4 py-3 text-[17px] text-ink outline-none focus:border-ink">
+                        @error('email') <p class="mt-1 text-[15px] font-semibold text-brand">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div data-solo-personal @if ($esEstudiante) hidden @endif>
+                        <label for="password" class="mb-2 block text-[15px] font-bold text-ink">
+                            Contraseña {{ $editando ? '(dejar vacío para no cambiar)' : '' }}
+                        </label>
+                        <input id="password" name="password" type="password"
+                            @if (! $editando) data-requerido="1" @endif
+                            @required(! $esEstudiante && ! $editando) autocomplete="new-password"
+                            class="w-full rounded-[15px] border-2 border-ink/20 bg-white px-4 py-3 text-[17px] text-ink outline-none focus:border-ink">
+                        @error('password') <p class="mt-1 text-[15px] font-semibold text-brand">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
@@ -84,19 +112,18 @@
                                 </option>
                             @endforeach
                         </select>
-                        <p class="mt-2 text-[15px] text-slate">Se muestra en la lista de notas y en los documentos del estudiante.</p>
+                        <p class="mt-2 text-[15px] text-slate">Se muestra en el perfil del estudiante, en la lista de notas y en sus documentos.</p>
                         @error('especialidad') <p class="mt-1 text-[15px] font-semibold text-brand">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
-                <div class="mt-5">
-                    <label for="password" class="mb-2 block text-[15px] font-bold text-ink">
-                        Contraseña {{ $editando ? '(dejar vacío para no cambiar)' : '' }}
-                    </label>
-                    <input id="password" name="password" type="password" @required(! $editando) autocomplete="new-password"
-                        class="w-full rounded-[15px] border-2 border-ink/20 bg-white px-4 py-3 text-[17px] text-ink outline-none focus:border-ink">
-                    @error('password') <p class="mt-1 text-[15px] font-semibold text-brand">{{ $message }}</p> @enderror
-                </div>
+                @if ($editando && $usuario->esEstudiante())
+                    <div class="mt-5 rounded-[15px] border-l-[6px] border-brand bg-[#fdecee] px-4 py-3">
+                        <p class="text-[16px] text-ink">
+                            La contraseña se genera automáticamente con el carnet, el primer nombre y el primer apellido. Si cambias el nombre o el carnet, la contraseña se actualiza y se muestra una sola vez al guardar.
+                        </p>
+                    </div>
+                @endif
 
                 <div class="mt-7 flex flex-wrap gap-4">
                     <button type="submit" class="btn-ss">{{ $editando ? 'Guardar cambios' : 'Registrar usuario' }}</button>
@@ -106,5 +133,35 @@
             </form>
         </div>
     </section>
+
+    <script>
+        (() => {
+            const rol = document.getElementById('role');
+            if (!rol) return;
+
+            const actualizar = () => {
+                const esEstudiante = rol.value === 'estudiante';
+
+                document.querySelectorAll('[data-solo-estudiante]').forEach((bloque) => {
+                    bloque.hidden = !esEstudiante;
+                    bloque.querySelectorAll('input, select').forEach((campo) => {
+                        campo.disabled = !esEstudiante;
+                        if (campo.dataset.requerido === '1') campo.required = esEstudiante;
+                    });
+                });
+
+                document.querySelectorAll('[data-solo-personal]').forEach((bloque) => {
+                    bloque.hidden = esEstudiante;
+                    bloque.querySelectorAll('input, select').forEach((campo) => {
+                        campo.disabled = esEstudiante;
+                        if (campo.dataset.requerido === '1') campo.required = !esEstudiante;
+                    });
+                });
+            };
+
+            rol.addEventListener('change', actualizar);
+            actualizar();
+        })();
+    </script>
 
 @endsection

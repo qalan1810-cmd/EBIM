@@ -31,6 +31,7 @@ class NotaController extends Controller
 
         $estudiantes = User::query()
             ->where('role', 'estudiante')
+            ->whereNotNull('curso_id')
             ->with(['curso', 'especialidadRel'])
             ->when($cursoId, fn ($query) => $query->where('curso_id', $cursoId))
             ->orderBy('name')
@@ -66,7 +67,7 @@ class NotaController extends Controller
      */
     public function estudiante(Request $request, User $estudiante): View
     {
-        abort_unless($estudiante->esEstudiante(), 404);
+        abort_unless($estudiante->esEstudiante() && $estudiante->curso_id !== null, 404);
 
         $gestiones = $estudiante->notas()->orderByDesc('gestion')->distinct()->pluck('gestion');
 
@@ -101,9 +102,20 @@ class NotaController extends Controller
 
     public function create(Request $request): View
     {
+        $estudiantes = $this->estudiantesConCurso();
+        $estudianteId = $request->query('estudiante');
+
+        if (is_string($estudianteId) && $estudianteId === '') {
+            $estudianteId = null;
+        }
+
+        if ($estudianteId !== null && (! is_string($estudianteId) || ! $estudiantes->contains('id', (int) $estudianteId))) {
+            abort(404);
+        }
+
         return view('pages.admin.notas.form', [
-            'nota' => new Nota(['user_id' => $request->query('estudiante')]),
-            'estudiantes' => User::where('role', 'estudiante')->orderBy('name')->get(),
+            'nota' => new Nota(['user_id' => $estudianteId]),
+            'estudiantes' => $estudiantes,
         ]);
     }
 
@@ -116,9 +128,15 @@ class NotaController extends Controller
 
     public function edit(Nota $nota): View
     {
+        $estudiantes = $this->estudiantesConCurso();
+
+        if (! $estudiantes->contains('id', $nota->user_id)) {
+            abort(404);
+        }
+
         return view('pages.admin.notas.form', [
             'nota' => $nota,
-            'estudiantes' => User::where('role', 'estudiante')->orderBy('name')->get(),
+            'estudiantes' => $estudiantes,
         ]);
     }
 
@@ -151,6 +169,21 @@ class NotaController extends Controller
             ->with('exito', $mensaje);
     }
 
+    /**
+     * Estudiantes habilitados para el registro de notas: deben tener un curso
+     * asignado. Nayra todavía no tiene curso, por lo que queda fuera.
+     *
+     * @return Collection<int, User>
+     */
+    private function estudiantesConCurso(): Collection
+    {
+        return User::query()
+            ->where('role', 'estudiante')
+            ->whereNotNull('curso_id')
+            ->orderBy('name')
+            ->get();
+    }
+
     private function gestionSeleccionada(Request $request, Collection $gestiones): string
     {
         $solicitada = $request->query('gestion');
@@ -180,6 +213,14 @@ class NotaController extends Controller
             'parcial' => 'parcial',
             'nota' => 'nota',
         ]);
+
+        $estudiante = User::find($datos['user_id']);
+
+        if (! $estudiante?->esEstudiante() || $estudiante->curso_id === null) {
+            throw ValidationException::withMessages([
+                'user_id' => 'Solo se pueden registrar notas a estudiantes con curso asignado.',
+            ]);
+        }
 
         $asignatura = Asignatura::firstOrCreate([
             'nombre' => trim($datos['asignatura']),

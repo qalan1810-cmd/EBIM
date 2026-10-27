@@ -88,7 +88,7 @@ class AdminPanelTest extends TestCase
             '_method' => 'PUT',
             'historia' => ['titulo' => 'Nuestra historia', 'cuerpo' => 'Contenido actualizado.'],
             'historia_resumen' => ['titulo' => 'Nuestra historia', 'cuerpo' => 'Resumen actualizado.'],
-            'cronologia' => ['titulo' => 'Cronología', 'cuerpo' => "2009 | Hito | Detalle"],
+            'cronologia' => ['titulo' => 'Cronología', 'cuerpo' => '2009 | Hito | Detalle'],
             'sobre_intro' => ['titulo' => 'Sobre EBIM', 'cuerpo' => 'Texto inicial actualizado.'],
             'rector' => ['titulo' => 'Rector de prueba', 'cuerpo' => 'Formación de prueba.', 'foto' => '/assets/ebim/prueba.jpg'],
             'mision' => ['titulo' => 'Misión', 'cuerpo' => 'Misión actualizada.'],
@@ -114,7 +114,9 @@ class AdminPanelTest extends TestCase
 
     public function test_se_puede_registrar_una_nota(): void
     {
+        $curso = Curso::create(['nombre' => '2 "A"', 'orden' => 1]);
         $estudiante = $this->estudiante();
+        $estudiante->update(['curso_id' => $curso->id]);
 
         $this->actingAs($this->admin())->post('/admin/notas', [
             'user_id' => $estudiante->id,
@@ -136,7 +138,9 @@ class AdminPanelTest extends TestCase
 
     public function test_no_se_puede_repetir_una_nota_en_el_mismo_parcial(): void
     {
+        $curso = Curso::create(['nombre' => '2 "A"', 'orden' => 1]);
         $estudiante = $this->estudiante();
+        $estudiante->update(['curso_id' => $curso->id]);
         $asignaturaId = $this->asignatura('Lenguaje musical');
 
         $estudiante->notas()->create([
@@ -184,7 +188,7 @@ class AdminPanelTest extends TestCase
         $ana->notas()->create(['asignatura' => 'Instrumento principal', 'gestion' => '2026', 'parcial' => 2, 'nota' => 90]);
 
         $this->actingAs($this->admin())
-            ->get('/admin/notas?curso=' . $cursoA->id)
+            ->get('/admin/notas?curso='.$cursoA->id)
             ->assertOk()
             ->assertSee('Curso')
             ->assertSee('Estudiante')
@@ -215,7 +219,7 @@ class AdminPanelTest extends TestCase
         $estudiante->notas()->create(['asignatura' => 'Lenguaje musical', 'gestion' => '2026', 'parcial' => 1, 'nota' => 77]);
 
         $this->actingAs($this->admin())
-            ->get('/admin/notas/estudiante/' . $estudiante->id . '?gestion=2026')
+            ->get('/admin/notas/estudiante/'.$estudiante->id.'?gestion=2026')
             ->assertOk()
             ->assertSee('Ana Pinedo')
             ->assertSee('Guitarra')
@@ -223,6 +227,131 @@ class AdminPanelTest extends TestCase
             ->assertSee('77.00')
             ->assertSee('Nueva nota')
             ->assertSee('Promedio de la gestión');
+    }
+
+    public function test_la_lista_de_notas_excluye_estudiantes_sin_curso(): void
+    {
+        $curso = Curso::create(['nombre' => '2 "A"', 'orden' => 1]);
+
+        User::create([
+            'name' => 'Ana Con Curso',
+            'email' => 'ana.concurso@example.com',
+            'password' => Hash::make('secreto123'),
+            'role' => 'estudiante',
+            'curso_id' => $curso->id,
+        ]);
+
+        User::create([
+            'name' => 'Nayra Sin Curso',
+            'email' => 'nayra.sincursocurso@example.com',
+            'password' => Hash::make('secreto123'),
+            'role' => 'estudiante',
+        ]);
+
+        $this->actingAs($this->admin())
+            ->get('/admin/notas')
+            ->assertOk()
+            ->assertSee('Ana Con Curso')
+            ->assertDontSee('Nayra Sin Curso');
+    }
+
+    public function test_el_formulario_de_notas_solo_lista_estudiantes_con_curso(): void
+    {
+        $curso = Curso::create(['nombre' => '2 "A"', 'orden' => 1]);
+
+        User::create([
+            'name' => 'Ana Con Curso',
+            'email' => 'ana.concurso@example.com',
+            'password' => Hash::make('secreto123'),
+            'role' => 'estudiante',
+            'curso_id' => $curso->id,
+        ]);
+
+        User::create([
+            'name' => 'Nayra Sin Curso',
+            'email' => 'nayra.sincursocurso@example.com',
+            'password' => Hash::make('secreto123'),
+            'role' => 'estudiante',
+        ]);
+
+        $this->actingAs($this->admin())
+            ->get('/admin/notas/create')
+            ->assertOk()
+            ->assertSee('Ana Con Curso')
+            ->assertDontSee('Nayra Sin Curso');
+    }
+
+    public function test_no_se_puede_gestionar_notas_de_un_estudiante_sin_curso(): void
+    {
+        $sinCurso = User::create([
+            'name' => 'Nayra Sin Curso',
+            'email' => 'nayra.sincursocurso@example.com',
+            'password' => Hash::make('secreto123'),
+            'role' => 'estudiante',
+        ]);
+
+        $admin = $this->admin();
+
+        $this->actingAs($admin)
+            ->get('/admin/notas/estudiante/'.$sinCurso->id)
+            ->assertNotFound();
+
+        $this->actingAs($admin)
+            ->get('/admin/notas/create?estudiante='.$sinCurso->id)
+            ->assertNotFound();
+    }
+
+    public function test_no_se_puede_registrar_notas_a_un_estudiante_sin_curso(): void
+    {
+        $sinCurso = User::create([
+            'name' => 'Nayra Sin Curso',
+            'email' => 'nayra.sincursocurso@example.com',
+            'password' => Hash::make('secreto123'),
+            'role' => 'estudiante',
+        ]);
+
+        $this->actingAs($this->admin())->post('/admin/notas', [
+            'user_id' => $sinCurso->id,
+            'asignatura' => 'Materia de prueba',
+            'gestion' => '2026',
+            'parcial' => 1,
+            'nota' => 80,
+        ])->assertSessionHasErrors([
+            'user_id' => 'Solo se pueden registrar notas a estudiantes con curso asignado.',
+        ]);
+
+        $this->assertDatabaseCount('notas', 0);
+    }
+
+    public function test_el_rector_puede_registrar_notas_a_todos_los_estudiantes_con_curso(): void
+    {
+        $curso = Curso::create(['nombre' => '2 "A"', 'orden' => 1]);
+        $admin = $this->admin();
+
+        $estudiantes = collect(range(1, 4))->map(function (int $numero) use ($curso) {
+            return User::create([
+                'name' => 'Estudiante '.$numero,
+                'email' => 'estudiante'.$numero.'@example.com',
+                'password' => Hash::make('secreto123'),
+                'role' => 'estudiante',
+                'curso_id' => $curso->id,
+            ]);
+        });
+
+        foreach ($estudiantes as $indice => $estudiante) {
+            $this->actingAs($admin)->post('/admin/notas', [
+                'user_id' => $estudiante->id,
+                'asignatura' => 'Materia '.$indice,
+                'gestion' => '2026',
+                'parcial' => 1,
+                'nota' => 70 + $indice,
+            ])->assertRedirect(route('admin.notas.estudiante', [
+                'estudiante' => $estudiante->id,
+                'gestion' => '2026',
+            ]));
+        }
+
+        $this->assertDatabaseCount('notas', 4);
     }
 
     public function test_se_puede_registrar_un_horario(): void
@@ -414,6 +543,50 @@ class AdminPanelTest extends TestCase
         $this->assertSame('Martes', $horario->fresh()->dia);
     }
 
+    public function test_el_rector_puede_devolver_un_horario_aprobado_para_corregirlo(): void
+    {
+        $curso = Curso::create(['nombre' => '2 "A"', 'orden' => 1]);
+
+        $horario = $curso->horarios()->create([
+            'dia' => 'Lunes',
+            'hora_inicio' => '08:00',
+            'hora_fin' => '10:00',
+            'asignatura' => 'Instrumento principal',
+            'docente' => 'Docente de Prueba',
+        ]);
+
+        $admin = $this->admin();
+        $director = $this->director();
+
+        $curso->estado_horario = Curso::ESTADO_APROBADO;
+        $curso->horario_revisado_en = now();
+        $curso->horario_revisado_por = $admin->id;
+        $curso->save();
+
+        $this->actingAs($admin)
+            ->post("/admin/horarios/{$curso->id}/rechazar", [
+                'observacion' => 'Actualizar la carga horaria del segundo año.',
+            ])->assertRedirect(route('admin.horarios.index', ['curso' => $curso->id]));
+
+        $curso->refresh();
+
+        $this->assertSame(Curso::ESTADO_RECHAZADO, $curso->estado_horario);
+        $this->assertSame('Actualizar la carga horaria del segundo año.', $curso->horario_observacion);
+
+        // Al quedar devuelto, el director académico recupera la edición.
+        $this->actingAs($director)
+            ->put("/admin/horarios/{$horario->id}", [
+                'curso_id' => $curso->id,
+                'dia' => 'Martes',
+                'hora_inicio' => '08:00',
+                'hora_fin' => '10:00',
+                'asignatura' => 'Instrumento principal',
+                'docente' => 'Docente de Prueba',
+            ])->assertRedirect(route('admin.horarios.index', ['curso' => $curso->id]));
+
+        $this->assertSame('Martes', $horario->fresh()->dia);
+    }
+
     public function test_el_rector_necesita_una_observacion_para_devolver_el_horario(): void
     {
         $curso = Curso::create(['nombre' => '2 "A"', 'orden' => 1]);
@@ -518,24 +691,85 @@ class AdminPanelTest extends TestCase
         $this->assertDatabaseMissing('cursos', ['id' => $curso->id]);
     }
 
-    public function test_se_puede_registrar_un_usuario(): void
+    public function test_se_puede_registrar_un_estudiante_con_codigo_y_carnet(): void
     {
         $especialidadId = $this->especialidad('Guitarra');
 
+        $respuesta = $this->actingAs($this->admin())->post('/admin/usuarios', [
+            'name' => 'Nayra Pérez',
+            'role' => 'estudiante',
+            'codigo' => '6509',
+            'carnet' => '7084785',
+            'especialidad' => 'Guitarra',
+        ]);
+
+        $respuesta->assertRedirect(route('admin.usuarios.index'))
+            ->assertSessionHas('exito');
+
+        $this->assertSame('6509', session('credenciales.codigo'));
+        $this->assertSame('7084785nayraperez', session('credenciales.password'));
+
+        $estudiante = User::where('codigo', '6509')->firstOrFail();
+
+        $this->assertSame('Nayra Pérez', $estudiante->name);
+        $this->assertSame('7084785', $estudiante->carnet);
+        $this->assertSame('estudiante', $estudiante->role);
+        $this->assertNull($estudiante->email);
+        $this->assertSame($especialidadId, $estudiante->especialidad_id);
+        $this->assertTrue(Hash::check('7084785nayraperez', $estudiante->password));
+    }
+
+    public function test_el_codigo_del_estudiante_solo_admite_numeros(): void
+    {
         $this->actingAs($this->admin())->post('/admin/usuarios', [
-            'name' => 'Nuevo Estudiante',
-            'email' => 'nuevo@example.com',
-            'password' => 'secreto123',
+            'name' => 'Estudiante Inválido',
             'role' => 'estudiante',
             'codigo' => '2026-100',
-            'especialidad' => 'Guitarra',
+            'carnet' => '7084786',
+        ])->assertSessionHasErrors('codigo');
+
+        $this->assertDatabaseMissing('users', ['name' => 'Estudiante Inválido']);
+    }
+
+    public function test_se_puede_registrar_personal_con_correo_y_contrasena(): void
+    {
+        $this->actingAs($this->admin())->post('/admin/usuarios', [
+            'name' => 'Secretaría EBIM',
+            'role' => 'director',
+            'email' => 'secretaria@example.com',
+            'password' => 'secreto123',
         ])->assertRedirect(route('admin.usuarios.index'));
 
         $this->assertDatabaseHas('users', [
-            'email' => 'nuevo@example.com',
-            'role' => 'estudiante',
-            'especialidad_id' => $especialidadId,
+            'name' => 'Secretaría EBIM',
+            'email' => 'secretaria@example.com',
+            'role' => 'director',
+            'codigo' => null,
+            'carnet' => null,
         ]);
+    }
+
+    public function test_al_cambiar_el_carnet_se_actualiza_la_contrasena_del_estudiante(): void
+    {
+        $estudiante = User::create([
+            'name' => 'Nayra Pérez',
+            'role' => 'estudiante',
+            'codigo' => '6509',
+            'carnet' => '7084785',
+            'password' => '7084785nayraperez',
+        ]);
+
+        $this->actingAs($this->admin())->put("/admin/usuarios/{$estudiante->id}", [
+            'name' => 'Nayra Pérez',
+            'role' => 'estudiante',
+            'codigo' => '6509',
+            'carnet' => '7123456',
+        ])->assertRedirect(route('admin.usuarios.index'));
+
+        $estudiante->refresh();
+
+        $this->assertSame('7123456', $estudiante->carnet);
+        $this->assertTrue(Hash::check('7123456nayraperez', $estudiante->password));
     }
 
     public function test_no_se_puede_eliminar_el_propio_usuario(): void
@@ -567,7 +801,7 @@ class AdminPanelTest extends TestCase
         $payload = ['_token' => 'token-de-prueba', '_method' => 'PUT'];
 
         foreach (['historia', 'historia_resumen', 'cronologia', 'sobre_intro', 'rector', 'mision', 'vision', 'valores', 'requisitos', 'pasos_inscripcion'] as $clave) {
-            $payload[$clave] = ['titulo' => 'T ' . $clave, 'cuerpo' => 'C ' . $clave];
+            $payload[$clave] = ['titulo' => 'T '.$clave, 'cuerpo' => 'C '.$clave];
         }
 
         $this->actingAs($this->admin())

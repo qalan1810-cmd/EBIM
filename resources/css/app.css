@@ -462,6 +462,60 @@ body.pagina-guindo #site-header.is-scrolled {
   .nav-item:hover {
     color: #fff;
   }
+
+  /* El acceso es la accion principal de la barra. Mantiene el rojo de marca,
+     pero con una forma plana y compacta, sin sombras ni inversiones que lo
+     hagan parecer un elemento flotante o ajeno al resto del menu. */
+  #site-header .nav-item--login {
+    margin-left: 6px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background-color: var(--color-brand);
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+  }
+  #site-header .nav-item--login::before {
+    display: none;
+  }
+  #site-header .nav-item--login:hover {
+    background-color: #9d1421;
+    color: #fff;
+  }
+  #site-header .nav-item--login.is-active {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+  }
+  #site-header .nav-item--login:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+
+  #mobile-menu .nav-login-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 14px;
+    margin-bottom: 4px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    background-color: var(--color-brand);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-align: center;
+  }
+  #mobile-menu .nav-login-mobile:hover {
+    background-color: #9d1421;
+    color: #fff;
+  }
+  #mobile-menu .nav-login-mobile.is-active {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+  }
+  #mobile-menu .nav-login-mobile:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
 }
 
 /* Elementor's entrance animations */

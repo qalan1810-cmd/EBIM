@@ -168,11 +168,14 @@ class HorarioController extends Controller
 
     /**
      * El rector devuelve el horario al director académico con una observación.
+     *
+     * También puede reabrir un horario ya aprobado para que el director lo
+     * corrija. Mientras se corrige, el curso deja de verlo en su portal.
      */
     public function rechazar(Request $request, Curso $curso): RedirectResponse
     {
-        if ($curso->estado_horario !== Curso::ESTADO_ENVIADO) {
-            return $this->volverAlCurso($curso, 'error', 'Solo se pueden devolver horarios pendientes de revisión.');
+        if (! in_array($curso->estado_horario, [Curso::ESTADO_ENVIADO, Curso::ESTADO_APROBADO], true)) {
+            return $this->volverAlCurso($curso, 'error', 'Solo se pueden devolver horarios pendientes de revisión o ya aprobados.');
         }
 
         $datos = $request->validate([

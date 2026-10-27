@@ -29,6 +29,7 @@
         <div class="datos-estudiante">
             <p><span>Estudiante:</span> {{ $estudiante->name }}</p>
             <p><span>Código:</span> {{ $estudiante->codigo ?: 'No asignado' }}</p>
+            <p><span>Carnet:</span> {{ $estudiante->carnet ?: 'No asignado' }}</p>
             <p><span>Curso:</span> {{ $estudiante->curso?->nombre ?? 'No asignado' }}</p>
             <p><span>Gestión:</span> {{ $gestion }}</p>
         </div>

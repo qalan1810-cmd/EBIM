@@ -46,7 +46,7 @@
         <div class="firma">
             <div class="linea"></div>
             <p class="nombre">{{ $estudiante->name }}</p>
-            <p>C.I.: ____________________</p>
+            <p>C.I.: {{ $estudiante->carnet ?: '____________________' }}</p>
             <p>Estudiante</p>
         </div>
 

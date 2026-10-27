@@ -20,20 +20,44 @@ class AuthController extends Controller
 
     /**
      * Autentica al usuario y lo envía a su panel según su rol.
+     *
+     * Los estudiantes usan su código numérico; el personal autorizado sigue
+     * usando su correo electrónico. El campo se llama `login` y se acepta
+     * también el antiguo campo `email` para no romper formularios guardados.
      */
     public function login(Request $request): RedirectResponse
     {
-        $credenciales = $request->validate([
-            'email' => ['required', 'email'],
+        $campo = $request->exists('login') ? 'login' : 'email';
+
+        $mensajes = [
+            'password.required' => 'La contraseña es obligatoria.',
+            $campo.'.required' => $campo === 'login'
+                ? 'Ingrese su código de estudiante o correo electrónico.'
+                : 'Ingrese su correo electrónico.',
+            $campo.'.max' => 'El dato ingresado es demasiado largo.',
+        ];
+
+        $request->validate([
+            $campo => ['required', 'string', 'max:255'],
             'password' => ['required', 'string'],
-        ], [], [
-            'email' => 'correo electrónico',
+        ], $mensajes, [
+            $campo => $campo === 'login' ? 'código o correo electrónico' : 'correo electrónico',
             'password' => 'contraseña',
         ]);
 
+        $identificador = trim((string) $request->input($campo));
+
+        // Los códigos de estudiante son solo dígitos; cualquier otro valor se
+        // busca como correo electrónico del personal autorizado.
+        $campoCredencial = ctype_digit($identificador) ? 'codigo' : 'email';
+        $credenciales = [
+            $campoCredencial => $identificador,
+            'password' => (string) $request->input('password'),
+        ];
+
         if (! Auth::attempt($credenciales, $request->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'email' => 'Las credenciales proporcionadas no coinciden con ningún registro.',
+                $campo => 'El código o correo y la contraseña no son correctos.',
             ]);
         }
 
@@ -59,7 +83,7 @@ class AuthController extends Controller
             'exito',
             $esPersonal
                 ? 'Bienvenido al panel de administración.'
-                : 'Bienvenido a tu portal, ' . $usuario->name . '.'
+                : 'Bienvenido a tu portal, '.$usuario->name.'.'
         );
     }
 

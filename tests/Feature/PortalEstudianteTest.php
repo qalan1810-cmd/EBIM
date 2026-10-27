@@ -77,6 +77,40 @@ class PortalEstudianteTest extends TestCase
             ->assertDontSee('>Gestión</th>', false);
     }
 
+    public function test_el_estudiante_consulta_sus_notas_por_gestion(): void
+    {
+        $this->seed();
+
+        $estudiante = User::where('email', 'estudiante@ebim.edu.bo')->firstOrFail();
+
+        $estudiante->notas()->create([
+            'asignatura' => 'Materia de la gestión 2025',
+            'gestion' => '2025',
+            'parcial' => 1,
+            'nota' => 71,
+        ]);
+
+        $estudiante->notas()->create([
+            'asignatura' => 'Materia de la gestión 2026',
+            'gestion' => '2026',
+            'parcial' => 1,
+            'nota' => 91,
+        ]);
+
+        $this->actingAs($estudiante)
+            ->get('/portal?gestion=2025')
+            ->assertOk()
+            ->assertSee('Gestión:')
+            ->assertSee('Materia de la gestión 2025')
+            ->assertDontSee('Materia de la gestión 2026');
+
+        $this->actingAs($estudiante)
+            ->get('/portal?gestion=2026')
+            ->assertOk()
+            ->assertSee('Materia de la gestión 2026')
+            ->assertDontSee('Materia de la gestión 2025');
+    }
+
     public function test_el_portal_ofrece_los_dos_documentos_imprimibles(): void
     {
         $this->seed();
@@ -192,7 +226,10 @@ class PortalEstudianteTest extends TestCase
             ->assertOk()
             ->assertSee('Mi perfil')
             ->assertSee($estudiante->codigo)
-            ->assertSee($estudiante->email);
+            ->assertSee('Instrumento de especialidad')
+            ->assertSee($estudiante->especialidad)
+            ->assertSee('Carnet de identidad')
+            ->assertSee($estudiante->carnet ?: 'No asignado');
     }
 
     public function test_el_portal_muestra_el_horario_del_curso_del_estudiante(): void
