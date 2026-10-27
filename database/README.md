@@ -33,7 +33,7 @@ su forma de uso.
 
 | Tabla | Campos principales | Relaciones |
 |-------|--------------------|------------|
-| `users` | `name`, `email` (opcional), `password`, `role`, `codigo`, `carnet`, `curso_id`, `especialidad_id` | `curso_id → cursos.id`; `especialidad_id → especialidades.id`. `codigo` y `carnet` son únicos. |
+| `users` | `name`, `email` (opcional), `password`, `role`, `codigo`, `carnet`, `curso_id`, `especialidad_id`, `foto` | `curso_id → cursos.id`; `especialidad_id → especialidades.id`. `codigo` y `carnet` son únicos. `foto` guarda la ruta de la imagen de perfil; si está vacía se usa la predeterminada de la EBIM. |
 | `cursos` | `nombre`, `orden`, `estado_horario`, datos de envío/revisión | `horario_enviado_por` y `horario_revisado_por → users.id`. |
 | `docentes` | `nombre`, `cargo`, `especialidad`, `formacion`, `experiencia`, `foto`, `encuadre`, `orden`, `activo` | Catálogo del plantel docente. |
 | `contenidos` | `clave`, `titulo`, `cuerpo`, `foto` | Textos institucionales editables. |
@@ -88,11 +88,14 @@ desde SQLite.
   Calizaya y Julio Wilfredo Roque Copa están asignados a 2.º «A» (`curso_id = 2`) y ven su
   horario aprobado. Nayra Pérez queda sin curso porque su caso especial y su horario todavía
   no fueron proporcionados. Los cinco estudiantes tienen la especialidad **Guitarra**
-  (`especialidad_id = 2`), que se muestra en su perfil.
-- **Notas:** las 8 notas de demostración pertenecían a la estudiante de prueba que fue
-  eliminada; la clave foránea `notas.user_id` usa `ON DELETE CASCADE`, por lo que también
-  se eliminaron. La base actual no tiene notas registradas. El registro de notas del panel
-  solo incluye estudiantes con curso asignado; Nayra queda fuera hasta que se le asigne uno.
+  (`especialidad_id = 2`), que se muestra en la configuración de su perfil.
+- **Fotos de perfil:** los estudiantes y el personal usan una imagen predeterminada de la
+  EBIM. Cada usuario puede reemplazarla desde **Configuración**; la ruta se guarda en
+  `users.foto` y las imágenes personalizadas quedan en `public/assets/ebim/perfiles`.
+- **Notas:** la base actual tiene 128 notas de prueba, 16 por estudiante y gestión
+  (Cristian, Joel, José y Julio), repartidas entre las gestiones 2025 y 2026. El registro de
+  notas del panel solo incluye estudiantes con curso asignado; Nayra queda fuera hasta que
+  se le asigne uno.
 - **Horarios:** se conservan los 120 registros. El horario de 2.º «A» fue reemplazado por
   el indicado para el curso: 15 franjas de lunes a viernes en las bandas 08:30–10:00,
   10:00–11:30 y 11:30–13:00, y quedó en estado `aprobado` después de pasar por dirección

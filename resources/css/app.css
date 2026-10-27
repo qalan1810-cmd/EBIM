@@ -8,67 +8,67 @@
 @source '../**/*.js';
 
 /* ---------------------------------------------------------------------------
-   Soho Sonic — self-hosted webfonts (Satoshi + Poppins)
+   EBIM — self-hosted webfonts (Satoshi + Poppins)
 --------------------------------------------------------------------------- */
 @font-face {
   font-family: 'Satoshi';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/assets/sohosonic/fonts/Satoshi-Regular.woff2') format('woff2');
+  src: url('/assets/ebim/fonts/Satoshi-Regular.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Satoshi';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/assets/sohosonic/fonts/Satoshi-Bold.woff2') format('woff2');
+  src: url('/assets/ebim/fonts/Satoshi-Bold.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Satoshi';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
-  src: url('/assets/sohosonic/fonts/Satoshi-Black.woff2') format('woff2');
+  src: url('/assets/ebim/fonts/Satoshi-Black.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Satoshi';
   font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url('/assets/sohosonic/fonts/Satoshi-Italic.woff2') format('woff2');
+  src: url('/assets/ebim/fonts/Satoshi-Italic.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Satoshi';
   font-style: italic;
   font-weight: 700;
   font-display: swap;
-  src: url('/assets/sohosonic/fonts/Satoshi-BoldItalic.woff2') format('woff2');
+  src: url('/assets/ebim/fonts/Satoshi-BoldItalic.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/assets/sohosonic/fonts/Poppins-400.woff2') format('woff2');
+  src: url('/assets/ebim/fonts/Poppins-400.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('/assets/sohosonic/fonts/Poppins-600.woff2') format('woff2');
+  src: url('/assets/ebim/fonts/Poppins-600.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/assets/sohosonic/fonts/Poppins-700.woff2') format('woff2');
+  src: url('/assets/ebim/fonts/Poppins-700.woff2') format('woff2');
 }
 
 /* ---------------------------------------------------------------------------
-   Design tokens measured from the source site (Elementor kit 22298)
+   Design tokens
 --------------------------------------------------------------------------- */
 @theme {
   --font-sans: 'Satoshi', ui-sans-serif, system-ui, sans-serif;

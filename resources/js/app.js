@@ -1,10 +1,9 @@
 /*
- * Soho Sonic clone — interaction layer.
- * Mirrors the Elementor behaviours the source site relies on:
- * sticky header background, mobile menu, dropdowns, FAQ accordion,
- * logo marquee and the newsletter popup. Also handles Elementor
- * accordion/toggle, portfolio filters, slideshows/carousels,
- * gallery lightbox, crew modal, and form suppression.
+ * Capa de interacción del sitio EBIM.
+ * Gestiona el encabezado fijo, el menú móvil, los desplegables, el acordeón
+ * de preguntas, la marquesina de logos y el aviso de novedades. También
+ * atiende acordeones y toggles, filtros de portafolio, carruseles, galería,
+ * ventanas de equipo y el envío de formularios.
  */
 
 const onReady = (fn) => {

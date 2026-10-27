@@ -101,7 +101,7 @@ contraseña inicial se genera con el **carnet**, el **primer nombre** y el **pri
 La base actual tiene únicamente las cinco cuentas de estudiante indicadas por la institución.
 Cristian, Joel, José y Julio están asignados a 2.º «A» y consultan el horario aprobado de ese
 curso; Nayra Pérez queda pendiente porque su caso especial y su horario aún no fueron
-proporcionados. Los cinco tienen la especialidad **Guitarra**, que se muestra en su perfil.
+proporcionados. Los cinco tienen la especialidad **Guitarra**, que se muestra en la configuración de su perfil.
 No quedan cuentas de rectoría, dirección ni administración. Para volver a usar el panel hay
 que crear una cuenta con rol `admin`.
 
@@ -132,6 +132,7 @@ texto plano dentro del repositorio. El detalle del esquema y del flujo de alta e
 | `/ingresar` | Público | Formulario de acceso (redirige según el rol). |
 | `/salir` | Autenticado | Cierre de sesión. |
 | `/portal` | Estudiante | Consulta de notas por gestión y horario de clases. |
+| `/perfil` | Autenticado | Configuración del perfil: foto, nombre, correo y contraseña. |
 
 ### Panel de administración (`/admin`, roles `admin` y `director`)
 
@@ -166,6 +167,7 @@ resources/views/
   pages/site/                  Páginas públicas
   pages/auth/                  Acceso
   pages/portal/                Portal del estudiante
+  pages/perfil/                Configuración del perfil
   pages/admin/                 Panel de administración
 routes/web.php                 Rutas del sitio
 tests/Feature/                 Pruebas de funcionalidad

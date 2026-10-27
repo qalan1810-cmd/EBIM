@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Foto de perfil predeterminada de personal de la EBIM">
+  <defs>
+    <linearGradient id="fondo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1d1d1d"/>
+      <stop offset="1" stop-color="#4a4a4a"/>
+    </linearGradient>
+    <linearGradient id="piel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6d4b4"/>
+      <stop offset="1" stop-color="#e8b98f"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="400" height="400" fill="#f7f2ea"/>
+  <circle cx="200" cy="200" r="198" fill="url(#fondo)"/>
+
+  <path d="M86 400c0-63 51-114 114-114s114 51 114 114z" fill="#f7f2ea" opacity=".96"/>
+  <path d="M172 286h56v42c0 15-12 27-28 27s-28-12-28-27z" fill="url(#piel)"/>
+  <circle cx="200" cy="177" r="76" fill="url(#piel)"/>
+  <path d="M124 177c0-48 34-86 76-86s76 38 76 86c0 12-3 23-8 33-8-33-34-56-68-56s-60 23-68 56c-5-10-8-21-8-33z" fill="#39251c"/>
+  <path d="M159 205c12 9 26 14 41 14s29-5 41-14" fill="none" stroke="#b9785b" stroke-linecap="round" stroke-width="5"/>
+  <circle cx="172" cy="183" r="5" fill="#39251c"/>
+  <circle cx="228" cy="183" r="5" fill="#39251c"/>
+
+  <path d="M200 306l-34 30 34 64 34-64z" fill="#f7f2ea"/>
+  <path d="M200 318l-20 18 20 40 20-40z" fill="#830101"/>
+  <path d="M200 306l-12 25 12 12 12-12z" fill="#bc1c2c"/>
+</svg>

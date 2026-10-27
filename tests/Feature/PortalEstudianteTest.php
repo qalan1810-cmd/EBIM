@@ -143,7 +143,8 @@ class PortalEstudianteTest extends TestCase
             ->assertSee('1er Parcial')
             ->assertSee('4to Parcial')
             ->assertSee('Nota final')
-            ->assertSee('Promedio de la gestión')
+            ->assertSee('Promedio de notas')
+            ->assertDontSee('Promedio de la gestión')
             ->assertSee('82.50')
             ->assertSee('Imprimir');
     }
@@ -215,7 +216,7 @@ class PortalEstudianteTest extends TestCase
             ->assertForbidden();
     }
 
-    public function test_el_portal_muestra_el_perfil_del_estudiante(): void
+    public function test_el_portal_muestra_el_nombre_y_el_perfil_del_estudiante(): void
     {
         $this->seed();
 
@@ -224,12 +225,33 @@ class PortalEstudianteTest extends TestCase
         $this->actingAs($estudiante)
             ->get('/portal')
             ->assertOk()
+            ->assertSee('Hola, '.$estudiante->primerNombre())
+            ->assertDontSee('/assets/ebim/perfiles/default-estudiante.svg')
             ->assertSee('Mi perfil')
+            ->assertSee('Nombre completo')
+            ->assertSee($estudiante->name)
+            ->assertSee('Código de estudiante')
             ->assertSee($estudiante->codigo)
+            ->assertSee('Curso')
+            ->assertSee($estudiante->curso->nombre)
             ->assertSee('Instrumento de especialidad')
             ->assertSee($estudiante->especialidad)
             ->assertSee('Carnet de identidad')
             ->assertSee($estudiante->carnet ?: 'No asignado');
+    }
+
+    public function test_la_barra_de_navegacion_muestra_las_iniciales_si_no_hay_foto(): void
+    {
+        $this->seed();
+
+        $estudiante = User::where('email', 'estudiante@ebim.edu.bo')->firstOrFail();
+
+        $this->assertFalse($estudiante->tieneFoto());
+
+        $this->actingAs($estudiante)
+            ->get('/portal')
+            ->assertOk()
+            ->assertSee('aria-hidden="true">'.$estudiante->iniciales().'</span>', false);
     }
 
     public function test_el_portal_muestra_el_horario_del_curso_del_estudiante(): void

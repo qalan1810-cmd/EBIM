@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\NoticiaController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\PortalController;
 use App\Http\Controllers\SitioController;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,14 @@ Route::permanentRedirect('/la-escuela', '/sobre-ebim');
 Route::get('/ingresar', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/ingresar', [AuthController::class, 'login'])->middleware('guest');
 Route::post('/salir', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+// ---------------------------------------------------------------------------
+// Configuración / perfil del usuario autenticado
+// ---------------------------------------------------------------------------
+Route::middleware('auth')->group(function () {
+    Route::get('/perfil', [PerfilController::class, 'edit'])->name('perfil.edit');
+    Route::put('/perfil', [PerfilController::class, 'update'])->name('perfil.update');
+});
 
 // ---------------------------------------------------------------------------
 // Portal del estudiante — consulta de notas y horarios (Histórico 5)

@@ -67,7 +67,7 @@
             </div>
 
             @if ($promedio !== null)
-                <p class="promedio">Promedio de la gestión: {{ number_format($promedio, 2) }}</p>
+                <p class="promedio">Promedio de notas: {{ number_format($promedio, 2) }}</p>
             @endif
         @endif
 

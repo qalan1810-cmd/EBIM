@@ -5,14 +5,11 @@
 
 @section('content')
 
-    <section class="pt-[70px] pb-[40px] max-md:pt-[50px]">
+    <section class="pt-[40px] pb-[30px] max-md:pt-[30px]">
         <div class="ebim-container" data-reveal>
             <h1 class="text-[56px] font-black leading-[1] text-white max-lg:text-[44px] max-md:text-[34px]">
-                Hola, {{ $estudiante->name }}
+                Hola, {{ $estudiante->primerNombre() }}
             </h1>
-            <p class="mt-4 text-[20px] text-white max-md:text-[18px]">
-                Consulta tu situación académica y tus actividades programadas.
-            </p>
         </div>
     </section>
 
@@ -22,25 +19,25 @@
             <div class="rounded-[25px] bg-white p-[30px] shadow-[0_0_12px_rgba(0,0,0,0.12)] max-md:p-[20px]">
                 <h2 class="text-[32px] font-bold leading-[1.3] text-ink max-md:text-[26px]">Mi perfil</h2>
 
-                <dl class="mt-6 grid grid-cols-5 gap-[20px] max-md:grid-cols-1">
+                <dl class="mt-6 grid grid-cols-1 gap-[20px] md:grid-cols-2 lg:grid-cols-[1.15fr_1.25fr_0.65fr_1.6fr_1.15fr]">
                     <div class="min-w-0">
-                        <dt class="flex items-end text-[14px] font-bold uppercase tracking-[1.5px] text-brand max-lg:text-[12px] max-lg:tracking-[1px] md:h-[60px] lg:h-[44px]">Nombre completo</dt>
+                        <dt class="flex items-end whitespace-nowrap text-[12px] font-bold uppercase tracking-[0.5px] text-brand md:h-[60px] lg:h-[44px]">Nombre completo</dt>
                         <dd class="mt-1 break-words text-[18px] text-ink">{{ $estudiante->name }}</dd>
                     </div>
                     <div class="min-w-0">
-                        <dt class="flex items-end text-[14px] font-bold uppercase tracking-[1.5px] text-brand max-lg:text-[12px] max-lg:tracking-[1px] md:h-[60px] lg:h-[44px]">Código de estudiante</dt>
+                        <dt class="flex items-end whitespace-nowrap text-[12px] font-bold uppercase tracking-[0.5px] text-brand md:h-[60px] lg:h-[44px]">Código de estudiante</dt>
                         <dd class="mt-1 break-words text-[18px] text-ink">{{ $estudiante->codigo ?: 'No asignado' }}</dd>
                     </div>
                     <div class="min-w-0">
-                        <dt class="flex items-end text-[14px] font-bold uppercase tracking-[1.5px] text-brand max-lg:text-[12px] max-lg:tracking-[1px] md:h-[60px] lg:h-[44px]">Curso</dt>
+                        <dt class="flex items-end whitespace-nowrap text-[12px] font-bold uppercase tracking-[0.5px] text-brand md:h-[60px] lg:h-[44px]">Curso</dt>
                         <dd class="mt-1 break-words text-[18px] text-ink">{{ $curso->nombre ?? 'No asignado' }}</dd>
                     </div>
                     <div class="min-w-0">
-                        <dt class="flex items-end text-[14px] font-bold uppercase tracking-[1.5px] text-brand max-lg:text-[12px] max-lg:tracking-[1px] md:h-[60px] lg:h-[44px]">Instrumento de especialidad</dt>
+                        <dt class="flex items-end whitespace-nowrap text-[12px] font-bold uppercase tracking-[0.5px] text-brand md:h-[60px] lg:h-[44px]">Instrumento de especialidad</dt>
                         <dd class="mt-1 break-words text-[18px] text-ink">{{ $estudiante->especialidad ?: 'No asignado' }}</dd>
                     </div>
                     <div class="min-w-0">
-                        <dt class="flex items-end text-[14px] font-bold uppercase tracking-[1.5px] text-brand max-lg:text-[12px] max-lg:tracking-[1px] md:h-[60px] lg:h-[44px]">Carnet de identidad</dt>
+                        <dt class="flex items-end whitespace-nowrap text-[12px] font-bold uppercase tracking-[0.5px] text-brand md:h-[60px] lg:h-[44px]">Carnet de identidad</dt>
                         <dd class="mt-1 break-words text-[18px] text-ink">{{ $estudiante->carnet ?: 'No asignado' }}</dd>
                     </div>
                 </dl>
@@ -140,7 +137,7 @@
     </section>
 
     {{-- Horario --}}
-    <section id="horario" class="scroll-mt-[130px] pb-[80px] max-md:pb-[60px]">
+    <section id="horario" class="scroll-mt-[130px] pb-[40px] max-md:pb-[30px]">
         <div class="ebim-container" data-reveal>
             <div class="rounded-[25px] bg-white p-[30px] shadow-[0_0_12px_rgba(0,0,0,0.12)] max-md:p-[20px]">
                 <h2 class="text-[32px] font-bold leading-[1.3] text-ink max-md:text-[26px]">Mi horario</h2>

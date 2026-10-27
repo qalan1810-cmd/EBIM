@@ -8,8 +8,8 @@
     <title>@yield('title', 'Escuela Boliviana Intercultural de Música | EBIM Oruro')</title>
     <meta name="description" content="@yield('description', 'Escuela Boliviana Intercultural de Música — formación musical intercultural en Oruro, Bolivia. Técnico Medio, Técnico Superior y Licenciatura en Música.')">
 
-    <link rel="icon" href="/assets/sohosonic/img/favicon.png" sizes="32x32">
-    <link rel="apple-touch-icon" href="/assets/sohosonic/img/favicon.png">
+    <link rel="icon" href="/assets/ebim/escudo-ebim.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/ebim/escudo-ebim.png">
 
     {{--
         app.css se carga primero para fijar el orden de capas antes de las
@@ -40,7 +40,7 @@
     "Ingresar". Se decide aqui por ruta para no tener que repetirlo en cada
     vista: solo las rutas autenticadas entran, las publicas no.
 --}}
-<body class="@yield('body-class') @yield('body_class') {{ request()->routeIs('portal.*', 'admin.*') ? 'pagina-guindo' : '' }}">
+<body class="@yield('body-class') @yield('body_class') {{ request()->routeIs('portal.*', 'admin.*', 'perfil.*') ? 'pagina-guindo' : '' }}">
 
     @include('partials.header')
 

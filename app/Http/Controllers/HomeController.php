@@ -111,6 +111,6 @@ class HomeController extends Controller
     {
         $propia = '/assets/ebim/home/historia.jpg';
 
-        return is_file(public_path($propia)) ? $propia : '/assets/sohosonic/img/live-room-1.jpg';
+        return is_file(public_path($propia)) ? $propia : '/assets/ebim/home/historia.jpg';
     }
 }

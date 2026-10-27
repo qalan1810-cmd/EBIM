@@ -83,7 +83,7 @@ class AuthController extends Controller
             'exito',
             $esPersonal
                 ? 'Bienvenido al panel de administración.'
-                : 'Bienvenido a tu portal, '.$usuario->name.'.'
+                : 'Bienvenido a tu portal, '.$usuario->primerNombre().'.'
         );
     }
 

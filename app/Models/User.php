@@ -27,6 +27,7 @@ class User extends Authenticatable
         'carnet',
         'curso_id',
         'especialidad_id',
+        'foto',
     ];
 
     /**
@@ -77,6 +78,51 @@ class User extends Authenticatable
     public function getEspecialidadAttribute(): ?string
     {
         return $this->especialidadRel?->nombre;
+    }
+
+    /**
+     * Foto de perfil. Si el usuario todavía no subió una, se usa una imagen
+     * predeterminada de la EBIM según su rol.
+     */
+    public function getFotoUrlAttribute(): string
+    {
+        if ($this->tieneFoto()) {
+            return '/'.ltrim($this->foto, '/');
+        }
+
+        return $this->esPersonal()
+            ? '/assets/ebim/perfiles/default-personal.svg'
+            : '/assets/ebim/perfiles/default-estudiante.svg';
+    }
+
+    /**
+     * Indica si el usuario subió una foto que sigue existiendo en disco.
+     */
+    public function tieneFoto(): bool
+    {
+        $foto = $this->foto ? ltrim($this->foto, '/') : null;
+
+        return $foto !== null && is_file(public_path($foto));
+    }
+
+    public function primerNombre(): string
+    {
+        return Str::before(trim($this->name), ' ');
+    }
+
+    /**
+     * Iniciales para el avatar predeterminado de la barra de navegación:
+     * primer nombre y primer apellido. Ejemplo: Cristian Quiuchaca = CQ.
+     */
+    public function iniciales(): string
+    {
+        $partes = preg_split('/\s+/u', trim($this->name)) ?: [];
+        $indiceApellido = max(1, count($partes) - 2);
+        $iniciales = Str::upper(
+            Str::substr($partes[0] ?? '', 0, 1).Str::substr($partes[$indiceApellido] ?? '', 0, 1)
+        );
+
+        return $iniciales !== '' ? $iniciales : '?';
     }
 
     /**

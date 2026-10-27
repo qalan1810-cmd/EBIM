@@ -45,8 +45,16 @@
                 {{-- Acceso al portal / administración --}}
                 <li class="group relative shrink-0">
                     @auth
+                        @php($usuario = auth()->user())
                         <span class="nav-item cursor-default">
-                            {{ auth()->user()->name }}
+                            @if ($usuario->tieneFoto())
+                                <img src="{{ $usuario->foto_url }}" alt="Foto de perfil"
+                                    class="mr-[8px] inline-block h-[30px] w-[30px] shrink-0 rounded-full object-cover align-middle">
+                            @else
+                                <span class="mr-[8px] inline-flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full bg-white text-[11px] font-bold uppercase leading-none tracking-[0.4px] text-brand align-middle"
+                                    aria-hidden="true">{{ $usuario->iniciales() }}</span>
+                            @endif
+                            {{ $usuario->primerNombre() }}
                             <span class="ml-[6px] inline-flex">
                                 <svg class="h-[10px] w-[10px]" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
                                     <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
@@ -89,6 +97,12 @@
                                     </a>
                                 </li>
                             @endif
+                            <li>
+                                <a href="{{ route('perfil.edit') }}"
+                                    class="block whitespace-nowrap px-5 py-3 text-[18px] font-semibold text-ink hover:bg-brand hover:text-white">
+                                    Configuración
+                                </a>
+                            </li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -156,17 +170,13 @@
             @endforeach
 
             @auth
-                <li class="border-b border-white/10">
-                    @if (auth()->user()->esPersonal())
+                @if (auth()->user()->esPersonal())
+                    <li class="border-b border-white/10">
                         <a href="{{ route('admin.dashboard') }}" class="block py-3 text-[18px] font-semibold text-white">
                             Panel de administración
                         </a>
-                    @else
-                        <a href="{{ route('portal.index') }}#perfil" class="block py-3 text-[18px] font-semibold text-white">
-                            Mi perfil
-                        </a>
-                    @endif
-                </li>
+                    </li>
+                @endif
                 @if (auth()->user()->esDirector())
                     <li class="border-b border-white/10">
                         <a href="{{ route('admin.horarios.index') }}" class="block py-3 text-[18px] font-semibold text-white">
@@ -175,6 +185,11 @@
                     </li>
                 @endif
                 @unless (auth()->user()->esPersonal())
+                    <li class="border-b border-white/10">
+                        <a href="{{ route('portal.index') }}#perfil" class="block py-3 text-[18px] font-semibold text-white">
+                            Mi perfil
+                        </a>
+                    </li>
                     <li class="border-b border-white/10">
                         <a href="{{ route('portal.index') }}#notas" class="block py-3 text-[18px] font-semibold text-white">
                             Mis notas
@@ -186,6 +201,11 @@
                         </a>
                     </li>
                 @endunless
+                <li class="border-b border-white/10">
+                    <a href="{{ route('perfil.edit') }}" class="block py-3 text-[18px] font-semibold text-white">
+                        Configuración
+                    </a>
+                </li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
